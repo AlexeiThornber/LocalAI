@@ -1,0 +1,201 @@
+/* Reset: sab default margins aur paddings remove */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  /* Modern clean font */
+}
+
+/* App container: full page layout */
+.app-container {
+  display: flex;
+  height: 100vh;
+  /* Full screen height */
+  background: #f7f9fc;
+  /* Light background */
+  color: #333;
+  /* Text color */
+}
+
+/* Sidebar design */
+.sidebar {
+  width: 250px;
+  background: #e0ebff;
+  /* Light blue shade */
+  border-right: 2px solid #c0d0f0;
+  /* Divider line */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar header styling */
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #c0d0f0;
+  /* Bottom line */
+}
+
+.sidebar-header h2 {
+  font-size: 1.3rem;
+  color: #1e3a8a;
+  /* Dark blue text */
+}
+
+/* New Chat button */
+#newChatButton {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1d4ed8;
+  /* Blue button */
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+#newChatButton:hover {
+  background-color: #2563eb;
+  /* Hover effect */
+}
+
+/* Chat history list */
+.chat-history {
+  list-style: none;
+  padding: 1rem;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.chat-history li {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background: #e5edff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.chat-history li.active,
+.chat-history li:hover {
+  background-color: #c7d8ff;
+  /* Active or hover color */
+}
+
+/* Chat main section */
+.chat-section {
+  flex: 1;
+  /* Take full space next to sidebar */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header of chat section */
+.chat-header {
+  padding: 1rem;
+  background: #dbeafe;
+  border-bottom: 2px solid #c0d0f0;
+}
+
+.chat-header h1 {
+    font-size: 1.2rem;  
+    color: #1e3a8a; 
+}
+
+#title {
+    padding: 10px;
+}
+
+/* Chat window messages */
+.chat-window {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background: #f9fbff;
+  /* Soft white-blue tone */
+}
+
+.message {
+  width: 100%;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.bubble {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 12px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  background: #e5edff;
+  color: #111827;
+  max-width: 90%;
+}
+.user-message{
+    justify-content: flex-end;
+}
+
+.bot-message{
+    justify-content: flex-start;
+}
+
+/* User message (right side) */
+.user-message .bubble {
+    align-self: flex-end;
+    background: #c7d8ff;
+    color: #1e3a8a;
+}
+
+/* Bot message (left side) */
+.bot-message .bubble {
+    align-self: flex-start;
+    background: #e5edff;
+    color: #111827;
+}
+
+/* Input area styling */
+.chat-input-area {
+    display: flex;
+    border-top: 2px solid #c0d0f0;
+    padding: 0.7rem;
+    background: #e0ebff;
+}   
+
+.chat-input-area input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #94a3b8;
+    font-size: 1rem;
+}
+
+.chat-input-area button {
+    margin-left: 10px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2563eb;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+.chat-input-area button:hover {
+    background-color: #1d4ed8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+}
