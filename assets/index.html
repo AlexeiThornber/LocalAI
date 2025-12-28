@@ -19,6 +19,8 @@
             </div>
             <ul class="chat-history" id="chatHistory">
                 <li class ="active">Today's chat</li>
+                <li class ="active">Ye chat</li>
+
             </ul>
         </aside>
 
@@ -26,7 +28,7 @@
         <main class = "chat-section">
             <!-- Header of chat -->
             <hearder>
-                <h1 id="title"> Alouche GPT </h1>
+                <h1 id="title"> Today's Chat </h1>
             </hearder>
         
             <!-- Chat window message area -->
@@ -47,7 +49,10 @@
             </div>
 
             <!-- Chat input - Message typing box -->
-            <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+            <div class="text-input">
+                <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+                <button>></button>
+            </div>
 
         </main>
     </div>
