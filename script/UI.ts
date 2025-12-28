@@ -6,14 +6,48 @@ This includes
 */
 
 const userInput = document.getElementById('userInput') as HTMLInputElement | null;
+const buttonInput = document.getElementById('enterButton')
+const chatWindow = document.getElementById('chatWindow');
 
 if(userInput){
     userInput.addEventListener('keydown', function(event) {
         if(event.key == "Enter"){
-            console.log(userInput.value)
+            const payload: string = userInput.value;
+            addText(payload);
+            clear();
         }
     });
-
 }else{
     console.log("Element with id 'userInput' has not been found")
+}
+
+if(buttonInput){
+    buttonInput.addEventListener('click', function() {
+        const payload: string = userInput.value;
+        addText(payload);
+        clear();
+    });
+}else{
+    console.log("Element with id 'buttonInput' has not been found")
+}
+
+function addText(content: string):void{
+    if(content == ""){
+        return
+    }
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = "message user-message";
+    messageDiv.id = "message";
+
+    const bubbleSpan = document.createElement('span');
+    bubbleSpan.className = "bubble";
+    bubbleSpan.textContent = content;
+
+    messageDiv.appendChild(bubbleSpan);
+    chatWindow.appendChild(messageDiv);
+}
+
+function clear():void {
+    userInput.value = "";
 }

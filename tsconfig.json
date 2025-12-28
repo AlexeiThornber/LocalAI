@@ -3,8 +3,8 @@
         "target": "esnext",
         "lib": ["dom", "es2017"],
         "outDir": "outjs",
-        "module": "nodenext",
-        "moduleResolution": "nodenext",
+        "module": "esnext",
+        "moduleResolution": "bundler",
     },
     "include": [
         "script/**/*.ts"
