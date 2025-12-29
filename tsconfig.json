@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "esnext",
         "lib": ["dom", "es2017"],
-        "outDir": "outjs",
+        "outDir": "out",
         "module": "esnext",
         "moduleResolution": "bundler",
     },
@@ -11,7 +11,7 @@
     ],
     "exclude": [
         "node_modules",
-        "outjs",
+        "out",
         "assests"
     ]
 }
