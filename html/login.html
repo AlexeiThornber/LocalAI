@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href="../css/login.css"/> <!-- CSS link -->
+    <script src="../outjs/view/login.js" defer></script>
+    <title>Login</title>
+</head>
+<body>
+    <section>
+        <form id="loginForm">
+            <h1>Sign In</h1>
+            <div id="usernameDiv">
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    placeholder="Enter your username" 
+                    required 
+                    autocomplete="off"
+                > <!-- TODO put username back in again -->
+            </div>
+            <div id="passwordDiv">
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Enter your password" 
+                    required 
+                    autocomplete="off"
+                > <!-- TODO put curren-password back in again -->
+            </div>
+            <button id = "submit" >
+                Log In
+            </button>
+            <div id = text> Or </div>
+            <button id = "create">
+                Create account
+            </button>
+        </form>
+    </section>
+</body>
+</html>

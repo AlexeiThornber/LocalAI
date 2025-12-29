@@ -1,4 +1,4 @@
-import {sendPayload} from './requestHandler.js';
+import {sendPayload} from '../requestHandler.js';
 /*
     This javascript file will handle the UI.
     This includes
@@ -14,14 +14,6 @@ if(userInput){
     userInput.addEventListener('keydown', function(event) {
         if(event.key == "Enter"){
             handleMessage();
-            // const payload: string = userInput.value;
-            // addText(payload);
-            // const botSpan = createBotMessage();
-            // sendPayload(payload, "hi", (content) => {
-            //     botSpan.textContent += content;
-            //     scrollChatToBottom();
-            // });
-            // clear();
         }
     });
 }else{
@@ -42,6 +34,7 @@ function handleMessage(): void{
     const botSpan = createBotMessage();
     sendPayload(payload, "hi", (content) => {
         botSpan.textContent += content;
+        scrollChatToBottom();
     });
     clear();
 }

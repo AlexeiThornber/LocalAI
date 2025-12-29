@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  /* Modern clean font */
+}
+
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+form {
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    min-width: 30px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+input {
+    /* width: 100%; */
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+#usernameDiv {
+    margin-bottom: 1rem;
+}
+
+#passwordDiv {
+    margin-bottom: 1.5rem;
+}
+
+#submit {
+    padding: 12px 22px;
+    border-radius: 18px;
+    width: 100%;
+    border: none;
+    background: linear-gradient(90deg, #2563eb 60%, #1d4ed8 100%);    
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(37,99,235,0.08);
+    transition: 0.2s, box-shadow 0.2s;
+}
+
+#submit:hover{
+    background: linear-gradient(90deg, #1d4ed8 60%, #2563eb 100%);
+    box-shadow: 0 4px 16px 0 rgba(37,99,235,0.15);
+}
+
+#text {
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 5px;
+    color: rgb(61, 61, 61)
+}
+
+#create {
+    padding: 12px 22px; 
+    border-radius: 18px;
+    width: 100%;
+    border: none;
+    background: linear-gradient(90deg, #b8b8b8 60%, #a5a5a5 100%);    
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(37,99,235,0.08);
+    transition: 0.2s, box-shadow 0.2s;
+}
+
+#create:hover{
+    background: linear-gradient(90deg, #a5a5a5 60%, #b8b8b8  100%);
+    box-shadow: 0 4px 16px 0 rgba(37,99,235,0.15);
+}

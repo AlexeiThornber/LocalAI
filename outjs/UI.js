@@ -12,14 +12,6 @@ if (userInput) {
     userInput.addEventListener('keydown', function (event) {
         if (event.key == "Enter") {
             handleMessage();
-            // const payload: string = userInput.value;
-            // addText(payload);
-            // const botSpan = createBotMessage();
-            // sendPayload(payload, "hi", (content) => {
-            //     botSpan.textContent += content;
-            //     scrollChatToBottom();
-            // });
-            // clear();
         }
     });
 }
@@ -40,6 +32,7 @@ function handleMessage() {
     const botSpan = createBotMessage();
     sendPayload(payload, "hi", (content) => {
         botSpan.textContent += content;
+        scrollChatToBottom();
     });
     clear();
 }
