@@ -1,9 +1,7 @@
 /*
     This file will handle the view for the login.html
 */
-
 const createButton = document.getElementById("create");
-
 
 if(createButton){
     createButton.addEventListener('click', function(){

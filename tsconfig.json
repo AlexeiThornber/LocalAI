@@ -12,6 +12,8 @@
     "exclude": [
         "node_modules",
         "out",
-        "assests"
+        "html",
+        "css",
+        "script/backend/"
     ]
 }
