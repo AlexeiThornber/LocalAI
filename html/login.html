@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "stylesheet" href="../css/login.css"/> <!-- CSS link -->
-    <script src="../out/view/login.js" defer></script>
+    <script type="module" src="../out/view/login.js" defer></script>
     <title>Login</title>
 </head>
 <body>
     <section>
-        <form id="loginForm">
+        <div id="loginForm">
             <h1>Sign In</h1>
             <div id="usernameDiv">
                 <input 
@@ -31,14 +31,14 @@
                     autocomplete="off"
                 > <!-- TODO put curren-password back in again -->
             </div>
-            <button id = "submit" >
+            <button id = "loginButton" >
                 Log In
             </button>
             <div id = text> Or </div>
-            <button type ="button" id = "create">
+            <button id = "createButton" type ="button">
                 Create account
             </button>
-        </form>
+        </div>
     </section>
 </body>
 </html>

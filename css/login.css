@@ -13,7 +13,7 @@ section {
     min-height: 100vh;
 }
 
-form {
+#loginForm {
     background: #f9f9f9;
     padding: 2rem;
     border-radius: 8px;
@@ -41,7 +41,7 @@ input {
     margin-bottom: 1.5rem;
 }
 
-#submit {
+#loginButton, #createButtn {
     padding: 12px 22px;
     border-radius: 18px;
     width: 100%;
@@ -55,7 +55,7 @@ input {
     transition: 0.2s, box-shadow 0.2s;
 }
 
-#submit:hover{
+#loginButton:hover, #createButtn:hover{
     background: linear-gradient(90deg, #1d4ed8 60%, #2563eb 100%);
     box-shadow: 0 4px 16px 0 rgba(37,99,235,0.15);
 }
@@ -67,7 +67,7 @@ input {
     color: rgb(61, 61, 61)
 }
 
-#create {
+#createButton {
     padding: 12px 22px; 
     border-radius: 18px;
     width: 100%;
@@ -81,7 +81,7 @@ input {
     transition: 0.2s, box-shadow 0.2s;
 }
 
-#create:hover{
+#createButton:hover{
     background: linear-gradient(90deg, #a5a5a5 60%, #b8b8b8  100%);
     box-shadow: 0 4px 16px 0 rgba(37,99,235,0.15);
 }
