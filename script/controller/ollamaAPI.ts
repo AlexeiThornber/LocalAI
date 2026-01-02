@@ -7,7 +7,8 @@
 export async function sendPayload(
     payload: string,
     model: string,
-    onStream: (text:string) => void 
+    onStream: (text:string) => void,
+    onComplete: () => void
 ):Promise<void>{
     // Prepare request data
     const requestData = {
@@ -22,7 +23,7 @@ export async function sendPayload(
         body: JSON.stringify(requestData),
     });
 
-    parsePayload(response, onStream)
+    parsePayload(response, onStream, onComplete);
 }
 
 export async function getTitle(
@@ -49,7 +50,8 @@ export async function getTitle(
 
 async function parsePayload(
     response: Response,
-    onStream: (text:string) => void
+    onStream: (text:string) => void,
+    onComplete: () => void
 ):Promise<void> {
     if(!response.body) return;
 
@@ -61,6 +63,7 @@ async function parsePayload(
     while(true){
         const {value, done} = await reader.read();
         if (done) {
+            onComplete();
             break;
         }
         buffer += decoder.decode(value, {stream: true});

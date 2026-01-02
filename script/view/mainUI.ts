@@ -1,4 +1,5 @@
 import {sendPayload, getTitle} from '../controller/ollamaAPI.js';
+import { saveMessages } from '../controller/dbAPI.js';
 /*
     This javascript file will handle the UI.
     This includes
@@ -14,6 +15,12 @@ const h1title = document.getElementById('title');
 const chatHistory = document.getElementById('chatHistory');
 const userID = sessionStorage.getItem('username');
 
+var chatID: string = "";
+
+window.onbeforeunload = function() {
+    console.log("Page is reloading!");
+    debugger; // This will pause execution if DevTools is open
+};
 /*
 ===================================================================================================================
 The following code loads the history of chats of the designated user
@@ -60,14 +67,15 @@ if(newChat){
 Main function that handles the send and received messages via API calls
 ===================================================================================================================
 */ 
+
 function handleMessage(): void{
     const payload: string = userInput.value;
 
-    //New chat
     if(chatWindow.innerHTML.trim().length == 0){
-        getTitle(payload, "hi", function(title) {
+        getTitle(payload, "hi", (title) => {
+            chatID = title;
             clearActiveClass();
-            addNewText(title);
+            addNewChat(chatID);
         });
     }
 
@@ -76,10 +84,17 @@ function handleMessage(): void{
     const botSpan = createBotMessage();
 
     //TODO, implement model choice in the payload
-    sendPayload(payload, "hi", (content) => {
-        botSpan.textContent += content;
-        scrollChatToBottom();
-    });
+    sendPayload(payload, "hi",
+        (content) => {
+            botSpan.textContent += content;
+            scrollChatToBottom();
+        },
+        () => {
+            //TODO first chatID is null as the above callback might have not finished :/
+            saveMessages(userID, chatID, document.querySelectorAll('.message'));
+        },
+    );
+
     clear();
 }
 
@@ -131,7 +146,7 @@ function clearActiveClass(): void{
     })
 }
 
-function addNewText(title: string):void {
+function addNewChat(title: string):void {
     h1title.innerHTML = title;
     const li = document.createElement('li');
     li.id = title;

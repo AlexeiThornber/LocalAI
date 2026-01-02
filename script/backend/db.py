@@ -16,6 +16,33 @@ def load_user_json(username):
         return None
     with open(user_file, 'r') as f:
         return json.load(f)
+    
+
+def save_chat_history(username: str, chatID: str, history: list): 
+    user_dir = os.path.join(USERS_DIR, username)
+    os.makedirs(user_dir, exist_ok=True)
+    chat_file = os.path.join(user_dir, f"{chatID}.json")
+    data = {'history': history}
+    with open(chat_file, 'w') as f:
+        json.dump(data, f, indent=2)
+    
+
+@app.route('/api/save', methods = ['POST'])
+def save():
+    data = request.json
+
+    username = data.get('username')
+    chatId = data.get('chatID')
+    history = data.get('history')
+
+    try:
+        save_chat_history(username, chatId, history)
+    except Exception as e:
+        print(f"Error saving chat history: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+    return jsonify({'success': True})
+
 
 @app.route('/api/login', methods = ['POST'])
 def login():
