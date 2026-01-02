@@ -25,6 +25,28 @@ export async function sendPayload(
     parsePayload(response, onStream)
 }
 
+export async function getTitle(
+    payload: string,
+    model: string,
+    callback: (title: string) => void
+):Promise<void>{
+    const requestData ={
+        model: 'Mistral', //TODO add the model parameter here
+        prompt: "Create a title of at most 5 words: " + payload,
+        stream: false
+    };
+
+    const response = await fetch('http://localhost:11434/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData),
+    });
+
+    const reply = await response.text();
+    const result = JSON.parse(reply);
+    callback(result.response.slice(1).replace(/^"+|"+$/g, ''));
+}
+
 async function parsePayload(
     response: Response,
     onStream: (text:string) => void

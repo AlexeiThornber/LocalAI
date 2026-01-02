@@ -81,14 +81,14 @@ button:hover {
   padding: 8px 10px;
   margin-bottom: 8px;
   border-radius: 6px;
-  background: #e5edff;
+  background: #c7d8ff;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .chat-history li.active,
 .chat-history li:hover {
-  background-color: #c7d8ff;
+  background-color: #91b4ff;
   /* Active or hover color */
 }
 
