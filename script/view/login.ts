@@ -4,6 +4,7 @@ import {hashPassword} from '../helper.js';
     This file will handle the view for the login.html
 */
 const loginButton = document.getElementById("loginButton");
+const loginForm = document.getElementById("loginForm");
 const createButton = document.getElementById("createButton");
 
 if(loginButton){
@@ -17,6 +18,21 @@ if(loginButton){
     });
 }else{
     console.log("Element with id 'loginButton' has not been found"); 
+}
+
+if(loginForm){
+    loginForm.addEventListener('keydown', async function(event){
+        if(event.key == "Enter"){
+            const username = (document.getElementById("username") as HTMLInputElement).value;
+            const password = (document.getElementById("password") as HTMLInputElement).value;
+
+            const passwordHash = await hashPassword(password);
+
+            sendPayload(username, passwordHash, "login");
+        }
+    });
+}else{
+    console.log("Element with id 'loginForm' has not been found");
 }
 
 if(createButton){

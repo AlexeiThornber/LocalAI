@@ -8,6 +8,8 @@ CORS(app)
 
 USERS_DIR = os.path.join(os.path.dirname(__file__), '../../users')
 
+max_users = 5
+
 def load_user_json(username):
     user_file = os.path.join(USERS_DIR, username, 'user.json')
     if not os.path.exists(user_file):
@@ -53,7 +55,10 @@ def create_account():
     user_file = os.path.join(user_dir, 'user.json')
 
     if os.path.exists(user_file):
-        return jsonify({'success': False, 'error': 'User already exists'}), 409
+        return jsonify({'success': False, 'error': f'User already with username: {username} already exists'}), 409
+    
+    if len(os.listdir(USERS_DIR)) >= max_users:
+        return jsonify({'success': False, 'error': f'Max user count reached: {max_users}'}), 409
 
     os.makedirs(user_dir, exist_ok=True)
 
