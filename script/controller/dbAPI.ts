@@ -1,6 +1,5 @@
 
-
-export async function sendPayload(
+export async function login(
     username: string,
     passwordHash: string,
     type: string, //Type can be login or create-account
@@ -25,12 +24,11 @@ export async function sendPayload(
 
     if(result.success){
         sessionStorage.setItem('username', username);
-        window.location.href = `main.html`
+        window.location.href = `main.html`;
     }else{
         alert(`Error: ${result.error}`);   
     }
 }
-
 
 export async function saveMessages(uid: string, chatId: string,  messages: NodeList){
     const conversationHistory: Array<{user:string, bot:string}> = [];
@@ -57,5 +55,4 @@ export async function saveMessages(uid: string, chatId: string,  messages: NodeL
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     });
-
 }

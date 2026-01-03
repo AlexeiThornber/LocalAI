@@ -1,4 +1,4 @@
-import {sendPayload} from '../controller/dbAPI.js';
+import {login} from '../controller/dbAPI.js';
 import {hashPassword} from '../helper.js';
 /*
     This file will handle the view for the login.html
@@ -9,12 +9,7 @@ const createButton = document.getElementById("createButton");
 
 if(loginButton){
     loginButton.addEventListener('click', async function(){
-        const username = (document.getElementById("username") as HTMLInputElement).value;
-        const password = (document.getElementById("password") as HTMLInputElement).value;
-
-        const passwordHash = await hashPassword(password);
-
-        sendPayload(username, passwordHash, "login");
+        getAndSendCredentials();
     });
 }else{
     console.log("Element with id 'loginButton' has not been found"); 
@@ -23,12 +18,7 @@ if(loginButton){
 if(loginForm){
     loginForm.addEventListener('keydown', async function(event){
         if(event.key == "Enter"){
-            const username = (document.getElementById("username") as HTMLInputElement).value;
-            const password = (document.getElementById("password") as HTMLInputElement).value;
-
-            const passwordHash = await hashPassword(password);
-
-            sendPayload(username, passwordHash, "login");
+            getAndSendCredentials();
         }
     });
 }else{
@@ -41,4 +31,13 @@ if(createButton){
     });
 }else{
     console.log("Element with id 'createButton' has not been found");
+}
+
+async function getAndSendCredentials(){
+    const username = (document.getElementById("username") as HTMLInputElement).value;
+    const password = (document.getElementById("password") as HTMLInputElement).value;
+
+    const passwordHash = await hashPassword(password);
+
+    login(username, passwordHash, "login");
 }

@@ -17,10 +17,6 @@ const userID = sessionStorage.getItem('username');
 
 var chatID: string = "";
 
-window.onbeforeunload = function() {
-    console.log("Page is reloading!");
-    debugger; // This will pause execution if DevTools is open
-};
 /*
 ===================================================================================================================
 The following code loads the history of chats of the designated user
@@ -97,6 +93,49 @@ function handleMessage(): void{
 
     clear();
 }
+
+//? This handle message will guarantee that the chatID is not null but message takes longer
+//? To send, don't know what is better
+// function handleMessage(): void{
+//     const payload: string = userInput.value;
+
+//     New chat
+//     if(chatWindow.innerHTML.trim().length == 0){
+//         getTitle(payload, "hi", (title) => {
+//             TODO make this more readable
+//             chatID = title;
+//             clearActiveClass();
+//             addNewChat(title);
+
+//             createUserMessage(payload);
+//             const botSpan = createBotMessage();
+
+//             sendPayload(payload, "hi",
+//             (content) => {
+//                 botSpan.textContent += content;
+//                 scrollChatToBottom();
+//             },
+//             () => {
+//                 saveMessages(userID, title, document.querySelectorAll('.message'));
+//             });
+//             clear();
+//         });
+//     }else{
+//         createUserMessage(payload);
+//         const botSpan = createBotMessage();
+//         TODO, implement model choice in the payload
+//         sendPayload(payload, "hi",
+//             (content) => {
+//                 botSpan.textContent += content;
+//                 scrollChatToBottom();
+//             },
+//             () => {
+//                 saveMessages(userID, chatID, document.querySelectorAll('.message'));
+//             });
+//         clear();
+
+//     }
+// }
 
 /*
 ===================================================================================================================
