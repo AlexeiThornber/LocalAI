@@ -51,7 +51,7 @@ export async function loadAllTitles(
     callback(result.titles);
 }
 
-export async function loadChat(
+export async function fetchChat(
     uid: string,
     chatId: string,
     callback: (title: string, content: any) => void
@@ -74,6 +74,25 @@ export async function loadChat(
     }
 
     callback(result.chatTitle, JSON.parse(result.content))
+}
+
+export async function deleteChat(
+    uid: string,
+    chatId: string
+): Promise<void>{
+
+    const response = await fetch('http://localhost:5000/api/deleteChat',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({username: uid, chatID: chatId})
+    });
+
+    const text = await response.text();
+    const result = JSON.parse(text);
+
+    // if(result.success){
+        //alert(`chat with title: ${chatId} has successfully been deleted`);
+    // }
 }
 
 export async function saveMessages(uid: string, chatId: string,  messages: NodeList){

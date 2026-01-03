@@ -1,5 +1,5 @@
 import {sendPayload, getTitle} from '../controller/ollamaAPI.js';
-import { saveMessages, loadAllTitles, loadChat as fetchChat } from '../controller/dbAPI.js';
+import { saveMessages, loadAllTitles, fetchChat, deleteChat } from '../controller/dbAPI.js';
 /*
     This javascript file will handle the UI.
     This includes
@@ -13,6 +13,7 @@ const chatWindow = document.getElementById('chatWindow');
 const newChat = document.getElementById('newChatButton');
 const h1title = document.getElementById('title');
 const chatHistory = document.getElementById('chatHistory');
+const deleteButton = document.getElementById('delete');
 const userID = sessionStorage.getItem('username');
 
 var chatID: string = ""; //TODO any better way than to have a global variable
@@ -23,9 +24,16 @@ The following code loads the history of chats of the designated user
 ===================================================================================================================
 */ 
 
+//* Refreshes the entire page
 onLoad()
 
 function onLoad(){
+    clearActiveClass();
+    clearMainChat();
+    clearTitle();
+    clearChatHistory();
+
+    deleteButton.style.display = "none";
     loadAllTitles(userID, (titles) => {
         titles.forEach(title => {
             loadChatHistory(title);
@@ -34,20 +42,8 @@ function onLoad(){
 }
 
 function loadChatHistory(title: string): void{
-    const titleLi = document.createElement('li');
-    titleLi.id = title;
-    titleLi.innerHTML = title;
-    titleLi.className = "";
-    titleLi.addEventListener('click', () => {
-        fetchChat(
-            userID,
-            title,
-            displayChat
-        )
-        clearActiveClass();
-        titleLi.className = "active";
-    });
-    chatHistory.appendChild(titleLi);
+    addNewChat(title);
+    chatHistory.appendChild(addNewChat(title, true));
 }
 
 function displayChat(title:string, content: any){
@@ -89,10 +85,22 @@ if(newChat){
     newChat.addEventListener('click', () => {
         h1title.innerHTML = '';
         chatWindow.innerHTML = '';
+        clearActiveClass();
+        deleteButton.style.display = "none";
     });
 }else{
     console.log("Element with id 'newChatButton' has not been found");
 }
+
+if(deleteButton){
+    deleteButton.addEventListener('click', () => {
+        deleteChat(userID, chatID);
+        onLoad();
+    });
+}else{
+    console.log("Element with id 'delete' has not been found");
+}
+
 
 /*
 ===================================================================================================================
@@ -107,7 +115,9 @@ function handleMessage(): void{
         getTitle(payload, "hi", (title) => {
             chatID = title;
             clearActiveClass();
-            addNewChat(chatID);
+            addTitle(chatID);
+            chatHistory.insertBefore(addNewChat(chatID), chatHistory.firstChild);
+            deleteButton.style.display = "";
         });
     }
 
@@ -145,6 +155,10 @@ function clearMainChat(): void{
 
 function clearTitle(): void{
     h1title.innerHTML = "";
+}
+
+function clearChatHistory(){
+    chatHistory.innerHTML = "";
 }
 
 function addTitle(title: string):void {
@@ -190,13 +204,23 @@ function createUserMessage(content: string):void{
     scrollChatToBottom();
 }
 
-function addNewChat(title: string):void {
-    h1title.innerHTML = title;
-    const li = document.createElement('li');
-    li.id = title;
-    li.className = "active";
-    li.innerHTML = title;
-    chatHistory.insertBefore(li, chatHistory.firstChild);
+function addNewChat(title: string, onLoad: boolean = false): HTMLElement {
+    const titleLi = document.createElement('li');
+    titleLi.id = title;
+    titleLi.innerHTML = title;
+    titleLi.className = onLoad ? "" : "active";
+    titleLi.addEventListener('click', () => {
+        fetchChat(
+            userID,
+            title,
+            displayChat
+        )
+        clearActiveClass();
+        titleLi.className = "active";
+        deleteButton.style.display = "";
+        chatID = title;
+    });
+    return titleLi;
 }
 
 function scrollChatToBottom(): void {

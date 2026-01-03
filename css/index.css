@@ -102,6 +102,9 @@ button:hover {
 
 /* Header of chat section */
 .chat-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding: 10px;
   background: #dbeafe;
   border-bottom: 2px solid #c0d0f0;
@@ -110,6 +113,30 @@ button:hover {
 .chat-header h1 {
     font-size: 1.2rem;  
     color: #1e3a8a; 
+}
+
+/* Delete button styling */
+.delete-btn {
+  background: #4d6eff;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px 0 rgba(255,77,79,0.08);
+}
+
+.delete-btn:hover {
+  background: #2537d4;
+  box-shadow: 0 4px 16px 0 rgba(255,77,79,0.15);
+}
+
+.bin-icon {
+  display: block;
+  color: #fff;
 }
 
 #title {

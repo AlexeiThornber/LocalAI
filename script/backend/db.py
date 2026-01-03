@@ -93,6 +93,31 @@ def save():
     return jsonify({'success': True})
 
 
+@app.route('/api/deleteChat', methods = ['POST'])
+def deleteChat():
+    data = request.json
+
+    username = data.get("username")
+    chatID = data.get("chatID")
+
+    if chatID == "users":
+        return jsonify({'success': False, 'error': 'Not allowed to delete user.json'}), 500
+
+    chat_file = os.path.join(USERS_DIR, username, f"{chatID}.json")
+
+    if not os.path.exists(chat_file):
+        print(f'file not found with name {chatID}')
+        return jsonify({'success': False, 'error': f'file not found with name {chatID}'}), 404
+    
+    try:
+        os.remove(chat_file)
+    except Exception as e:
+        print(f"Error saving chat history: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+    return jsonify({'success': True})
+
+
 
 @app.route('/api/login', methods = ['POST'])
 def login():
