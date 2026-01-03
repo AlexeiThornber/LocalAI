@@ -11,8 +11,6 @@ export async function login(
     });
         
     const text = await response.text(); 
-    console.log("Raw response text:", text);
-
     let result: { success: any; error: any; };
 
     try {
@@ -28,6 +26,54 @@ export async function login(
     }else{
         alert(`Error: ${result.error}`);   
     }
+}
+
+export async function loadAllTitles(
+    uid: string,
+    callback:(titles: string[]) => void
+): Promise<void>{
+    const response = await fetch('http://localhost:5000/api/loadAll',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({username: uid})
+    });
+
+    const text = await response.text();
+    let result: { success: any; titles: string[]; error: any; };
+    
+    try {
+        result = JSON.parse(text);
+        console.log("Parsed JSON:", result);
+    } catch (e) {
+        console.error("JSON parse error:", e);
+    }
+
+    callback(result.titles);
+}
+
+export async function loadChat(
+    uid: string,
+    chatId: string,
+    callback: (title: string, content: any) => void
+): Promise<void>{
+
+    const response = await fetch('http://localhost:5000/api/loadChat',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({username: uid, chatID: chatId})
+    })
+
+    const text = await response.text();
+    let result: { success: any; chatTitle: string; content: string; error: any; };
+
+    try {
+        result = JSON.parse(text);
+        console.log("Parsed JSON:", result);
+    } catch (e) {
+        console.error("JSON parse error:", e);
+    }
+
+    callback(result.chatTitle, JSON.parse(result.content))
 }
 
 export async function saveMessages(uid: string, chatId: string,  messages: NodeList){

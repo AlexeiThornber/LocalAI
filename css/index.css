@@ -102,7 +102,7 @@ button:hover {
 
 /* Header of chat section */
 .chat-header {
-  padding: 1rem;
+  padding: 10px;
   background: #dbeafe;
   border-bottom: 2px solid #c0d0f0;
 }

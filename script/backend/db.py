@@ -10,6 +10,11 @@ USERS_DIR = os.path.join(os.path.dirname(__file__), '../../users')
 
 max_users = 5
 
+
+#===================================================================================================================
+#Helper functions
+#===================================================================================================================
+ 
 def load_user_json(username):
     user_file = os.path.join(USERS_DIR, username, 'user.json')
     if not os.path.exists(user_file):
@@ -25,7 +30,51 @@ def save_chat_history(username: str, chatID: str, history: list):
     data = {'history': history}
     with open(chat_file, 'w') as f:
         json.dump(data, f, indent=2)
+
+
+#===================================================================================================================
+# API calls 
+#===================================================================================================================
+ 
+@app.route('/api/loadAll', methods = ['POST'])
+def loadAll():
+    data = request.json
+
+    username = data.get('username')
+
+    user_dir = os.path.join(USERS_DIR, username)
+    titles = []
+
+    if not os.path.exists(user_dir):
+        return jsonify({'success': False, 'error': f'User not found with username {username} not found'}), 404
+
+    for fname in os.listdir(user_dir):
+        if fname.endswith('.json') and fname != 'user.json':
+            title = fname[:-5] # Remove the .json at the end
+            titles.append(title)
+
+    return jsonify({'success': True, 'titles': titles})
+
+
+
+@app.route('/api/loadChat', methods = ['POST'])
+def loadChat():
+    data = request.json
+
+    username = data.get('username')
+    chatID = data.get('chatID')
+
+    chat_file = os.path.join(USERS_DIR, username, f"{chatID}.json")
+
+    if not os.path.exists(chat_file):
+         return jsonify({'success': False, 'error': f'file not found with name {chatID}'}), 404
     
+    with open(chat_file, 'r') as f:
+        content = f.read()
+
+    return jsonify({'success': True, 'chatTitle': chatID, 'content': content})
+
+
 
 @app.route('/api/save', methods = ['POST'])
 def save():
@@ -42,6 +91,7 @@ def save():
         return jsonify({'success': False, 'error': str(e)}), 500
 
     return jsonify({'success': True})
+
 
 
 @app.route('/api/login', methods = ['POST'])

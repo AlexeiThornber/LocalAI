@@ -1,5 +1,5 @@
 import {sendPayload, getTitle} from '../controller/ollamaAPI.js';
-import { saveMessages } from '../controller/dbAPI.js';
+import { saveMessages, loadAllTitles, loadChat as fetchChat } from '../controller/dbAPI.js';
 /*
     This javascript file will handle the UI.
     This includes
@@ -15,7 +15,7 @@ const h1title = document.getElementById('title');
 const chatHistory = document.getElementById('chatHistory');
 const userID = sessionStorage.getItem('username');
 
-var chatID: string = "";
+var chatID: string = ""; //TODO any better way than to have a global variable
 
 /*
 ===================================================================================================================
@@ -23,7 +23,43 @@ The following code loads the history of chats of the designated user
 ===================================================================================================================
 */ 
 
+onLoad()
 
+function onLoad(){
+    loadAllTitles(userID, (titles) => {
+        titles.forEach(title => {
+            loadChatHistory(title);
+        })
+    });
+}
+
+function loadChatHistory(title: string): void{
+    const titleLi = document.createElement('li');
+    titleLi.id = title;
+    titleLi.innerHTML = title;
+    titleLi.className = "";
+    titleLi.addEventListener('click', () => {
+        fetchChat(
+            userID,
+            title,
+            displayChat
+        )
+        clearActiveClass();
+        titleLi.className = "active";
+    });
+    chatHistory.appendChild(titleLi);
+}
+
+function displayChat(title:string, content: any){
+    clearMainChat();
+    clearTitle();
+
+    content.history.forEach((element: any) =>{
+        createUserMessage(element.user);
+        createBotMessage(element.bot);
+        addTitle(title);
+    })
+}
 
 
 /*
@@ -32,7 +68,7 @@ The following code manages action handlers of the UI elements such as buttons an
 ===================================================================================================================
 */ 
 if(userInput){
-    userInput.addEventListener('keydown', function(event) {
+    userInput.addEventListener('keydown', (event) => {
         if(event.key == "Enter"){
             handleMessage();
         }
@@ -42,7 +78,7 @@ if(userInput){
 }
 
 if(buttonInput){
-    buttonInput.addEventListener('click', function() {
+    buttonInput.addEventListener('click', () => {
         handleMessage();
     });
 }else{
@@ -50,7 +86,7 @@ if(buttonInput){
 }
 
 if(newChat){
-    newChat.addEventListener('click', function(){
+    newChat.addEventListener('click', () => {
         h1title.innerHTML = '';
         chatWindow.innerHTML = '';
     });
@@ -91,67 +127,45 @@ function handleMessage(): void{
         },
     );
 
-    clear();
+    clearUserInput();
 }
-
-//? This handle message will guarantee that the chatID is not null but message takes longer
-//? To send, don't know what is better
-// function handleMessage(): void{
-//     const payload: string = userInput.value;
-
-//     New chat
-//     if(chatWindow.innerHTML.trim().length == 0){
-//         getTitle(payload, "hi", (title) => {
-//             TODO make this more readable
-//             chatID = title;
-//             clearActiveClass();
-//             addNewChat(title);
-
-//             createUserMessage(payload);
-//             const botSpan = createBotMessage();
-
-//             sendPayload(payload, "hi",
-//             (content) => {
-//                 botSpan.textContent += content;
-//                 scrollChatToBottom();
-//             },
-//             () => {
-//                 saveMessages(userID, title, document.querySelectorAll('.message'));
-//             });
-//             clear();
-//         });
-//     }else{
-//         createUserMessage(payload);
-//         const botSpan = createBotMessage();
-//         TODO, implement model choice in the payload
-//         sendPayload(payload, "hi",
-//             (content) => {
-//                 botSpan.textContent += content;
-//                 scrollChatToBottom();
-//             },
-//             () => {
-//                 saveMessages(userID, chatID, document.querySelectorAll('.message'));
-//             });
-//         clear();
-
-//     }
-// }
 
 /*
 ===================================================================================================================
 Helper functions
 ===================================================================================================================
 */ 
-function clear():void {
+function clearUserInput():void {
     userInput.value = "";
 }
 
-function createBotMessage(): HTMLSpanElement {
+function clearMainChat(): void{
+    chatWindow.innerHTML = "";
+}
+
+function clearTitle(): void{
+    h1title.innerHTML = "";
+}
+
+function addTitle(title: string):void {
+    h1title.innerHTML = title;
+}
+
+function clearActiveClass(): void{
+    const active = document.querySelectorAll('.active');
+
+    active.forEach(element => {
+        element.className = "";
+    });
+}
+
+function createBotMessage(content: string = ""): HTMLSpanElement {
     const messageDiv = document.createElement('div');
     messageDiv.className = "message bot-message";
     const bubbleSpan = document.createElement('span');
     bubbleSpan.className = "bubble";
     bubbleSpan.textContent = "";
+    bubbleSpan.innerHTML = content;
     messageDiv.appendChild(bubbleSpan);
     chatWindow.appendChild(messageDiv);
     scrollChatToBottom();
@@ -174,15 +188,6 @@ function createUserMessage(content: string):void{
     messageDiv.appendChild(bubbleSpan);
     chatWindow.appendChild(messageDiv);
     scrollChatToBottom();
-}
-
-
-function clearActiveClass(): void{
-    const active = document.querySelectorAll('.active');
-
-    active.forEach(element => {
-        element.className = "";
-    })
 }
 
 function addNewChat(title: string):void {
