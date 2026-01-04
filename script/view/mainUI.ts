@@ -22,6 +22,7 @@ const deleteButton = document.getElementById('delete');
 const themeButton = document.getElementById('theme');
 const sunSvg = document.getElementById('bi-sun');
 const moonSvg = document.getElementById('bi-moon');
+const modelSelector = document.getElementById("modelSelect");
 const userID = sessionStorage.getItem('username');
 
 var chatID: string = ""; //TODO any better way than to have a global variable
@@ -139,8 +140,10 @@ Main function that handles the send and received messages via API calls
 function handleMessage(): void{
     const payload: string = userInput.value;
 
+    const selectedModel = (modelSelector as HTMLSelectElement).value;
+
     if(chatWindow.innerHTML.trim().length == 0){
-        getTitle(payload, "hi", (title) => {
+        getTitle(payload, selectedModel, (title) => {
             chatID = title;
             clearActiveClass();
             addTitle(chatID);
@@ -153,8 +156,7 @@ function handleMessage(): void{
     createUserMessage(payload);
     const botSpan = createBotMessage();
 
-    //TODO, implement model choice in the payload
-    sendPayload(payload, "hi",
+    sendPayload(payload, selectedModel,
         (content) => {
             botSpan.textContent += content;
             scrollChatToBottom();

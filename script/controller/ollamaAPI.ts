@@ -12,7 +12,7 @@ export async function sendPayload(
 ):Promise<void>{
     // Prepare request data
     const requestData = {
-        model: 'Mistral', //TODO add the model parameter here
+        model: model,
         prompt: payload,
         stream: true
     };
@@ -32,7 +32,7 @@ export async function getTitle(
     callback: (title: string) => void
 ):Promise<void>{
     const requestData ={
-        model: 'Mistral', //TODO add the model parameter here
+        model: model,
         prompt: "Create a title of at most 5 words: " + payload,
         stream: false
     };
