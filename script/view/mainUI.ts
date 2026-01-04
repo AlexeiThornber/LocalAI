@@ -7,6 +7,11 @@ import { saveMessages, loadAllTitles, fetchChat, deleteChat } from '../controlle
     - Changing the apperance of website
 */
 
+const Theme = {
+    Ligth: true,
+    Dark: false
+} as const;
+
 const userInput = document.getElementById('userInput') as HTMLInputElement | null;
 const buttonInput = document.getElementById('enterButton');
 const chatWindow = document.getElementById('chatWindow');
@@ -14,9 +19,13 @@ const newChat = document.getElementById('newChatButton');
 const h1title = document.getElementById('title');
 const chatHistory = document.getElementById('chatHistory');
 const deleteButton = document.getElementById('delete');
+const themeButton = document.getElementById('theme');
+const sunSvg = document.getElementById('bi-sun');
+const moonSvg = document.getElementById('bi-moon');
 const userID = sessionStorage.getItem('username');
 
 var chatID: string = ""; //TODO any better way than to have a global variable
+var theme: boolean = Theme.Ligth;
 
 /*
 ===================================================================================================================
@@ -90,6 +99,25 @@ if(newChat){
     });
 }else{
     console.log("Element with id 'newChatButton' has not been found");
+}
+
+if(themeButton){
+    themeButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+
+        if(theme == Theme.Ligth){
+            sunSvg.style.display = "";
+            moonSvg.style.display = "none";
+            theme = Theme.Dark
+        }else{
+            sunSvg.style.display = "none";
+            moonSvg.style.display = "";
+            theme = Theme.Ligth
+        }
+
+    })
+}else{
+    console.log("Element with id 'theme' has not beef found");
 }
 
 if(deleteButton){

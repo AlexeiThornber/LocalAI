@@ -1,4 +1,6 @@
 /* Reset: sab default margins aur paddings remove */
+@import url('./theme.css');
+
 * {
   margin: 0;
   padding: 0;
@@ -12,18 +14,18 @@
   display: flex;
   height: 100vh;
   /* Full screen height */
-  background: #f7f9fc;
+  background: var(--bg-main);
   /* Light background */
-  color: #333;
+  color: var(--text-main);
   /* Text color */
 }
 
 /* Sidebar design */
 .sidebar {
   width: 250px;
-  background: #e0ebff;
+  background: var(--sidebar-bg);
   /* Light blue shade */
-  border-right: 2px solid #c0d0f0;
+  border-right: 2px solid var(--sidebar-border);
   /* Divider line */
   display: flex;
   flex-direction: column;
@@ -32,13 +34,13 @@
 /* Sidebar header styling */
 .sidebar-header {
   padding: 1rem;
-  border-bottom: 1px solid #c0d0f0;
+  border-bottom: 1px solid var(--sidebar-border);
   /* Bottom line */
 }
 
 .sidebar-header h2 {
   font-size: 1.3rem;
-  color: #1e3a8a;
+  color: var(--bubble-user-text);
   /* Dark blue text */
 }
 
@@ -46,7 +48,7 @@ button {
   padding: 12px 22px;
   border-radius: 18px;
   border: none;
-  background: linear-gradient(90deg, #2563eb 60%, #1d4ed8 100%);    
+  background: var(--button-gradient);    
   color: #fff;
   font-weight: 600;
   font-size: 1rem;
@@ -56,7 +58,7 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(90deg, #1d4ed8 60%, #2563eb 100%);
+  background: var(--button-gradient-hover);
   box-shadow: 0 4px 16px 0 rgba(37,99,235,0.15);
 }
 
@@ -81,14 +83,14 @@ button:hover {
   padding: 8px 10px;
   margin-bottom: 8px;
   border-radius: 6px;
-  background: #c7d8ff;
+  background: var(--sidebar-accent);
   cursor: pointer;
   transition: 0.3s;
 }
 
 .chat-history li.active,
 .chat-history li:hover {
-  background-color: #91b4ff;
+  background-color: var(--accent-blue-light);
   /* Active or hover color */
 }
 
@@ -106,20 +108,27 @@ button:hover {
   flex-direction: row;
   justify-content: space-between;
   padding: 10px;
-  background: #dbeafe;
-  border-bottom: 2px solid #c0d0f0;
+  background: var(--header-bg); /*TODO color palet ?*/
+  border-bottom: 2px solid var(--sidebar-border);
 }
 
 .chat-header h1 {
     font-size: 1.2rem;  
-    color: #1e3a8a; 
+    color: var(--bubble-user-text); 
+}
+
+#settings{
+  display: flex;
+  flex-direction: row;
 }
 
 /* Delete button styling */
-.delete-btn {
-  background: #4d6eff;
+.settings-btn {
+  height: 100%;
+  aspect-ratio: 1/1;
   border: none;
   border-radius: 50%;
+  margin-left: 10px;
   padding: 10px;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
@@ -129,14 +138,13 @@ button:hover {
   box-shadow: 0 2px 8px 0 rgba(255,77,79,0.08);
 }
 
-.delete-btn:hover {
-  background: #2537d4;
+.settings-btn:hover {
   box-shadow: 0 4px 16px 0 rgba(255,77,79,0.15);
 }
 
 .bin-icon {
   display: block;
-  color: #fff;
+  color: white;
 }
 
 #title {
@@ -148,7 +156,7 @@ button:hover {
   flex: 1;
   padding: 2rem; 
   overflow-y: auto;
-  background: #f9fbff;
+  background: var(--bg-main);
   /* Soft white-blue tone */
 }
 
@@ -164,8 +172,8 @@ button:hover {
   border-radius: 12px;
   line-height: 1.5;
   word-wrap: break-word;
-  background: #e5edff;
-  color: #111827;
+  background: var(--bubble-bot-bg);
+  color: var(--bubble-bot-text);
   max-width: 90%;
 }
 .user-message{
@@ -179,30 +187,30 @@ button:hover {
 /* User message (right side) */
 .user-message .bubble {
     align-self: flex-end;
-    background: #c7d8ff;
-    color: #1e3a8a;
+    background: var(--sidebar-accent);
+    color: var(--bubble-user-text);
 }
 
 /* Bot message (left side) */
 .bot-message .bubble {
     align-self: flex-start;
-    background: #e5edff;
-    color: #111827;
+    background: var(--bubble-bot-bg);
+    color: var(--bubble-bot-text);
 }
 
 /* Input area styling */
 .chat-input-area {
     display: flex;
-    border-top: 2px solid #c0d0f0;
+    border-top: 2px solid var(--sidebar-border);
     padding: 0.7rem;
-    background: #e0ebff;
+    background: var(--sidebar-bg);
 }   
 
 .chat-input-area input {
     flex: 1;
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid #94a3b8;
+    border: 1px solid #94a3b8; /*TODO color palet*/
     font-size: 1rem;
 }
 
@@ -211,15 +219,15 @@ button:hover {
     padding: 10px 16px;
     border: none;
     border-radius: 8px;
-    background-color: #2563eb;
-    color: white;
+    background-color: var(--input-border-focus);
+    color: white ;
     cursor: pointer;
     font-weight: 500;
     transition: 0.3s;
 }
 
 .chat-input-area button:hover {
-    background-color: #1d4ed8;
+    background-color: var(--primary-blue-dark);
 }
 
 .text-input {
@@ -227,27 +235,27 @@ button:hover {
   align-items: center;
   gap: 10px;
   margin: 30px 20px; 
-  background: #e0ebff;
+  background: var(--sidebar-bg);
   border-radius: 16px;
-  box-shadow: 0 2px 8px 0 rgba(30,58,138,0.04);
+  box-shadow: var(--shadow);
 }
 
 #userInput {
   flex: 1;
   padding: 14px 18px;
   border-radius: 18px;
-  border: 1.5px solid #b6c6e3;
-  background: #f4f7fe;
+  border: 1.5px solid var(--input-border);
+  background: var(--input-bg);
   font-size: 1.08rem;
-  color: #222b45;
+  color: var(--text-secondary);
   outline: none;
   box-shadow: none;
   transition: border 0.2s, box-shadow 0.2s;
 }
 
 #userInput:focus {
-  border: 1.5px solid #2563eb;
-  background: #fff;
+  border: 1.5px solid var(--primary-blue);
+  background: var(--input-bg);
   box-shadow: 0 4px 16px 0 rgba(37,99,235,0.10);
 }
 

@@ -1,0 +1,48 @@
+
+/*Light theme (default) */
+:root {
+  --bg-main: #f9fbff;
+  --header-bg: #dbeafe;
+  --sidebar-bg: #e0ebff;
+  --sidebar-accent: #c7d8ff;
+  --sidebar-border: #b6c6e3;
+  --primary-blue: #2563eb;
+  --primary-blue-dark: #1d4ed8;
+  --accent-blue-light: #91b4ff;
+  --bubble-bot-bg: #e5edff;
+  --bubble-user-bg: #c7d8ff;
+  --bubble-bot-text: #111827;
+  --bubble-user-text: #1e3a8a;
+  --text-main: #333;
+  --text-secondary: #222b45;
+  --input-bg: #f4f7fe;
+  --input-border: #b6c6e3;
+  --input-border-focus: #2563eb;
+  --shadow: 0 2px 8px 0 rgba(37,99,235,0.08);
+  --button-gradient: linear-gradient(90deg, #2563eb 60%, #1d4ed8 100%);
+  --button-gradient-hover: linear-gradient(90deg, #1d4ed8 60%, #2563eb 100%);
+}
+
+/* Dark theme */
+body.dark-theme {
+  --bg-main: #1e2230;
+  --header-bg: #011023;
+  --sidebar-bg: #232a3b;
+  --sidebar-accent: #28304a;
+  --sidebar-border: #374151;
+  --primary-blue: #3b82f6;
+  --primary-blue-dark: #2563eb;
+  --accent-blue-light: #173a86;
+  --bubble-bot-bg: #232a3b;
+  --bubble-user-bg: #2563eb;
+  --bubble-bot-text: #e0e6f7;
+  --bubble-user-text: #e0e6f7;
+  --text-main: #e0e6f7;
+  --text-secondary: #cbd5e1;
+  --input-bg: #232a3b;
+  --input-border: #374151;  
+  --input-border-focus: #2563eb;
+  --shadow: 0 2px 8px 0 rgba(30,58,138,0.25);
+  --button-gradient: linear-gradient(90deg, #0b2d75 60%, #103585 100%);
+  --button-gradient-hover: linear-gradient(90deg, #103585 60%, #0b2d75 100%);
+}
