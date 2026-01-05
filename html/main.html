@@ -6,6 +6,13 @@
     <title>ChatBot-APP</title>
     <link rel = "stylesheet" href="../css/index.css"/> <!-- CSS link -->
     <script type="module" src="../out/view/mainUI.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- <script type="module" defer>
+        import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+
+        document.getElementById('test123').innerHTML =
+            marked.parse("In Python, you can slice a list using square brackets `[]` with three special indices: `start`, `stop`, and `step`. Here's how they work:\n\n1. `start` (optional): The index at which the slicing starts. If not provided, it defaults to the first element (index 0).\n2. `stop` (optional): The index one past the last element of the slice. If not provided, it goes up to the end of the list.\n3. `step` (optional): The step between elements in the slice. If not provided, it defaults to 1, meaning every element is included.\n\nHere are some examples:\n\n- Basic slicing: `my_list[start:stop]` will return a new list with elements from `start` (inclusive) up to but not including `stop`.\n\n```python\nmy_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]\nprint(my_list[2:5])  # Outputs: [2, 3, 4]\n```\n\n- Negative indexing: You can use negative indices to count from the end of the list.\n\n```python\nprint(my_list[-6:-3])  # Outputs: [3, 4, 5]\n```\n\n- Stepping through the list: If you provide a step value (an integer greater than 0), only every nth element will be included in the slice.\n\n```python\nprint(my_list[1:7:2])  # Outputs: [1, 3, 5]\n```\n\nYou can also omit any of the indices. For example, `my_list[:3]` will return a new list with the first three elements, and `my_list[4:]` will return a new list from the 5th element to the end.")
+    </script> -->
 </head>
 <body>
     <!-- Main div - Full page structure -->
@@ -26,7 +33,7 @@
             <hearder class = "chat-header">
                 <select id="modelSelect">
                     <option class="selector" value="mistral" selected="selected">Mistral 7B (Recommended)</option>
-                    <option class="selector" value="deepseek-r1">DeepSeek-R1 7B</option>
+                    <!-- <option class="selector" value="deepseek-r1">DeepSeek-R1 7B</option> -->
                     <option class="selector" value="gemma3:12b">Gemma 3 12B</option>
                     <option class="selector" value="llama2-uncensored">Llama 2 uncensored 7B</option>
                     <!-- Add more models as needed -->
@@ -78,6 +85,11 @@
         
             <!-- Chat window message area -->
             <div class="chat-window" id="chatWindow">
+                <div class="message bot-message">
+                    <span class="bubble" id="test123">
+                        hey
+                    </span>
+                </div>
             </div>
 
             <!-- Chat input - Message typing box -->

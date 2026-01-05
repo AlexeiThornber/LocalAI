@@ -44,6 +44,114 @@
   /* Dark blue text */
 }
 
+/* Code block styling for markdown preview */
+.bubble pre {
+  background: var(--bg-main);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  overflow-x: auto;
+  font-size: 1em;
+  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.05);
+}
+
+.bubble code {
+  font-family: 'Fira Mono', 'Consolas', 'Courier New', monospace;
+  color: var(--text-main);
+  border-radius: 4px;
+  font-size: 1em;
+  word-break: break-word;
+}
+
+/* Inline code inside paragraphs */
+.bubble p code {
+  background: var(--bg-main);
+  color: var(--text-main);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Headings */
+.bubble h1, .bubble h2, .bubble h3, .bubble h4, .bubble h5, .bubble h6 {
+  margin: 1em 0 0.5em 0;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+/* AI Slop, see if needed */
+.bubble h1 { font-size: 1.5em; }
+.bubble h2 { font-size: 1.3em; }
+.bubble h3 { font-size: 1.15em; }
+.bubble h4, .bubble h5, .bubble h6 { font-size: 1em; }
+
+/* Lists */
+.bubble ul, .bubble ol {
+  list-style-position: inside;
+  margin: 0.5em 0 0.5em 1em;
+  padding-left: 0;
+}
+
+.bubble li {
+  margin: 0.3em 0;
+  padding-left: 0.2em;
+}
+
+/* Blockquotes */
+.bubble blockquote {
+  border-left: 4px solid #2563eb;
+  background: #f6f8fa;
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  color: #555;
+  border-radius: 6px;
+  font-style: italic;
+}
+
+/* Links */
+.bubble a {
+  color: #2563eb;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.bubble a:hover {
+  color: #d6336c;
+  text-decoration: underline;
+}
+
+/* Tables */
+.bubble table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  background: #f6f8fa;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.bubble th, .bubble td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.bubble th {
+  background: #e2e8f0;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* Images */
+.bubble img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 0.5em 0;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+}
+/* AI slop above */
+
 button {
   padding: 12px 22px;
   border-radius: 18px;
@@ -215,12 +323,18 @@ button:hover {
   color: var(--bubble-bot-text);
   max-width: 90%;
 }
+
 .user-message{
     justify-content: flex-end;
 }
 
 .bot-message{
     justify-content: flex-start;
+}
+
+.bubble ol,
+.bubble ul {
+  list-style-position: inside;
 }
 
 /* User message (right side) */

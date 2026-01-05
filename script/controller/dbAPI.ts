@@ -95,12 +95,12 @@ export async function deleteChat(
     // }
 }
 
-export async function saveMessages(uid: string, chatId: string,  messages: NodeList){
+export async function saveMessages(uid: string, chatId: string,  messages: string[]){
     const conversationHistory: Array<{user:string, bot:string}> = [];
 
     for(let i = 0; i < messages.length; i += 2){
-        const userMsg = messages[i]?.textContent || "";
-        const botMsg = messages[i + 1]?.textContent || "";
+        const userMsg = messages[i];
+        const botMsg = messages[i + 1];
         conversationHistory.push({
             user: userMsg,
             bot: botMsg

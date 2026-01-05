@@ -1,5 +1,8 @@
+// Function imoprts
 import {sendPayload, getTitle} from '../controller/ollamaAPI.js';
 import { saveMessages, loadAllTitles, fetchChat, deleteChat } from '../controller/dbAPI.js';
+
+// declare var marked: any;
 /*
     This javascript file will handle the UI.
     This includes
@@ -27,6 +30,10 @@ const userID = sessionStorage.getItem('username');
 
 var chatID: string = ""; //TODO any better way than to have a global variable
 var theme: boolean = Theme.Ligth;
+var messages: string[] =  [];
+var newChatBool: boolean = true;
+
+declare let marked: any;
 
 /*
 ===================================================================================================================
@@ -52,8 +59,8 @@ function onLoad(){
 }
 
 function loadChatHistory(title: string): void{
-    addNewChat(title);
-    chatHistory.appendChild(addNewChat(title, true));
+    refreshChat(title);
+    chatHistory.appendChild(refreshChat(title, true));
 }
 
 function displayChat(title:string, content: any){
@@ -61,8 +68,10 @@ function displayChat(title:string, content: any){
     clearTitle();
 
     content.history.forEach((element: any) =>{
+        messages.push(element.user);
+        messages.push(element.bot);
         createUserMessage(element.user);
-        createBotMessage(element.bot);
+        createBotMessage(marked.parse(element.bot));
         addTitle(title);
     })
 }
@@ -93,8 +102,10 @@ if(buttonInput){
 
 if(newChat){
     newChat.addEventListener('click', () => {
+        newChatBool = true;
         h1title.innerHTML = '';
         chatWindow.innerHTML = '';
+        clearMessages();
         clearActiveClass();
         deleteButton.style.display = "none";
     });
@@ -142,32 +153,44 @@ function handleMessage(): void{
 
     const selectedModel = (modelSelector as HTMLSelectElement).value;
 
-    if(chatWindow.innerHTML.trim().length == 0){
+    if(newChatBool){
         getTitle(payload, selectedModel, (title) => {
             chatID = title;
             clearActiveClass();
             addTitle(chatID);
-            chatHistory.insertBefore(addNewChat(chatID), chatHistory.firstChild);
+            chatHistory.insertBefore(refreshChat(chatID), chatHistory.firstChild);
             deleteButton.style.display = "";
+            
+            getContent(payload, selectedModel);
+            newChatBool = false;
+
         });
+    }else{
+        getContent(payload, selectedModel);
     }
 
+    clearUserInput();
+}
 
+function getContent(payload: string, selectedModel: string): void{
     createUserMessage(payload);
     const botSpan = createBotMessage();
+    var stringBuilder: string = "";
+
+    messages.push(payload);
 
     sendPayload(payload, selectedModel,
         (content) => {
-            botSpan.textContent += content;
+            stringBuilder += content
+            botSpan.innerHTML = marked.parse(stringBuilder);
             scrollChatToBottom();
         },
         () => {
-            //TODO first chatID is null as the above callback might have not finished :/
-            saveMessages(userID, chatID, document.querySelectorAll('.message'));
+            messages.push(stringBuilder);
+
+            saveMessages(userID, chatID, messages);
         },
     );
-
-    clearUserInput();
 }
 
 /*
@@ -189,6 +212,10 @@ function clearTitle(): void{
 
 function clearChatHistory(){
     chatHistory.innerHTML = "";
+}
+
+function clearMessages(): void{
+    messages.length = 0;
 }
 
 function addTitle(title: string):void {
@@ -234,12 +261,14 @@ function createUserMessage(content: string):void{
     scrollChatToBottom();
 }
 
-function addNewChat(title: string, onLoad: boolean = false): HTMLElement {
+function refreshChat(title: string, onLoad: boolean = false): HTMLElement {
     const titleLi = document.createElement('li');
     titleLi.id = title;
     titleLi.innerHTML = title;
     titleLi.className = onLoad ? "" : "active";
     titleLi.addEventListener('click', () => {
+        if(messages.length > 0) clearMessages();
+
         fetchChat(
             userID,
             title,
