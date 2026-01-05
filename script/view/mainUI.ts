@@ -26,6 +26,11 @@ const themeButton = document.getElementById('theme');
 const sunSvg = document.getElementById('bi-sun');
 const moonSvg = document.getElementById('bi-moon');
 const modelSelector = document.getElementById("modelSelect");
+const settingsButton = document.getElementById('settingsButton');
+const settingsOverlay = document.getElementById('settingsOverlay');
+const logoutBtn = document.getElementById('logoutBtn');
+const changeTitleBtn = document.getElementById('changeTitleBtn');
+
 const userID = sessionStorage.getItem('username');
 
 var chatID: string = ""; //TODO any better way than to have a global variable
@@ -49,6 +54,7 @@ function onLoad(){
     clearMainChat();
     clearTitle();
     clearChatHistory();
+    h1title.textContent = "New Chat";
 
     deleteButton.style.display = "none";
     loadAllTitles(userID, (titles) => {
@@ -103,7 +109,7 @@ if(buttonInput){
 if(newChat){
     newChat.addEventListener('click', () => {
         newChatBool = true;
-        h1title.innerHTML = '';
+        h1title.innerHTML = 'New chat';
         chatWindow.innerHTML = '';
         clearMessages();
         clearActiveClass();
@@ -141,6 +147,48 @@ if(deleteButton){
     console.log("Element with id 'delete' has not been found");
 }
 
+if(settingsButton){
+    settingsButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        settingsOverlay.style.display = settingsOverlay.style.display === 'none' ? 'block' : 'none';
+    });
+}else{
+    console.log("Element with id 'settingsButton' has not been found");
+}
+
+if(settingsOverlay){
+    // Prevent overlay from closing when clicking inside
+    settingsOverlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });   
+}else{
+    console.log("Element with id 'settingsOverlay' not found");
+}
+
+if(logoutBtn){
+    logoutBtn.addEventListener('click', () => {
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+    });  
+}else{
+    console.log("Element with id 'logoutBtn' not found");
+}
+
+// Change chat title action
+// changeTitleBtn.addEventListener('click', () => {
+//     const newTitle = prompt('Enter new chat title:');
+//     if (newTitle) {
+//         // Implement your logic to change the chat title here
+//         // For example, update the UI and send to backend if needed
+//         document.getElementById('title').textContent = newTitle;
+//     }
+//     settingsOverlay.style.display = 'none';
+// });
+
+// Hide overlay when clicking outside
+document.addEventListener('click', () => {
+    settingsOverlay.style.display = 'none';
+});
 
 /*
 ===================================================================================================================
@@ -277,6 +325,7 @@ function refreshChat(title: string, onLoad: boolean = false): HTMLElement {
         clearActiveClass();
         titleLi.className = "active";
         deleteButton.style.display = "";
+        newChatBool = false;
         chatID = title;
     });
     return titleLi;

@@ -7,12 +7,6 @@
     <link rel = "stylesheet" href="../css/index.css"/> <!-- CSS link -->
     <script type="module" src="../out/view/mainUI.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- <script type="module" defer>
-        import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
-
-        document.getElementById('test123').innerHTML =
-            marked.parse("In Python, you can slice a list using square brackets `[]` with three special indices: `start`, `stop`, and `step`. Here's how they work:\n\n1. `start` (optional): The index at which the slicing starts. If not provided, it defaults to the first element (index 0).\n2. `stop` (optional): The index one past the last element of the slice. If not provided, it goes up to the end of the list.\n3. `step` (optional): The step between elements in the slice. If not provided, it defaults to 1, meaning every element is included.\n\nHere are some examples:\n\n- Basic slicing: `my_list[start:stop]` will return a new list with elements from `start` (inclusive) up to but not including `stop`.\n\n```python\nmy_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]\nprint(my_list[2:5])  # Outputs: [2, 3, 4]\n```\n\n- Negative indexing: You can use negative indices to count from the end of the list.\n\n```python\nprint(my_list[-6:-3])  # Outputs: [3, 4, 5]\n```\n\n- Stepping through the list: If you provide a step value (an integer greater than 0), only every nth element will be included in the slice.\n\n```python\nprint(my_list[1:7:2])  # Outputs: [1, 3, 5]\n```\n\nYou can also omit any of the indices. For example, `my_list[:3]` will return a new list with the first three elements, and `my_list[4:]` will return a new list from the 5th element to the end.")
-    </script> -->
 </head>
 <body>
     <!-- Main div - Full page structure -->
@@ -33,7 +27,7 @@
             <hearder class = "chat-header">
                 <select id="modelSelect">
                     <option class="selector" value="mistral" selected="selected">Mistral 7B (Recommended)</option>
-                    <!-- <option class="selector" value="deepseek-r1">DeepSeek-R1 7B</option> -->
+                    <option class="selector" value="deepseek-r1">DeepSeek-R1 7B</option>
                     <option class="selector" value="gemma3:12b">Gemma 3 12B</option>
                     <option class="selector" value="llama2-uncensored">Llama 2 uncensored 7B</option>
                     <!-- Add more models as needed -->
@@ -64,22 +58,51 @@
 
                         <svg xmlns="http://www.w3.org/2000/svg" style="display: none;" width="22" height="22" fill="currentColor" id="bi-sun" class="bi-sun" viewBox="0 0 16 16">
                             <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4
-                             4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1
-                              .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0
-                               13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5
-                                0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1
-                                0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0
-                                1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3
-                                8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414
-                                1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5
-                                0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05
-                                13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1
-                                .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5
-                                0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464
-                                4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1
-                                .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+                            4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1
+                            .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0
+                            13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5
+                            0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1
+                            0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0
+                            1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3
+                            8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414
+                            1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5
+                            0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05
+                            13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1
+                            .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5
+                            0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464
+                            4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1
+                            .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
                         </svg>
                     </button>
+                    <button id="settingsButton" class="settings-btn" title="Settings">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" id="bi-gear" class="bi" viewBox="0 0 16 16">
+                            <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246
+                            0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246
+                            2.246 0 0 1-4.492 0"/>
+                            <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592
+                            0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54
+                            2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065
+                            0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901
+                            3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527
+                            1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1
+                            1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873
+                            0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873
+                            0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873
+                            0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873
+                            1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873
+                            1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873
+                            1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873
+                            1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873
+                            1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873
+                            1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873
+                            1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873
+                            1.873 0 0 0 2.692-1.115z"/>
+                        </svg>
+                    </button>
+                    <div id="settingsOverlay" class="settings-overlay" style="display: none;">
+                        <button id="logoutBtn">Log out</button>
+                        <button id="changeTitleBtn">Change chat title</button>
+                    </div>
                 </div>
             </hearder>
         
