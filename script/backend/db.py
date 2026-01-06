@@ -23,13 +23,24 @@ def load_user_json(username):
         return json.load(f)
     
 
-def save_chat_history(username: str, chatID: str, history: list): 
+def save_chat_history(username: str, chatID: str, timestamp: int, history: list): 
     user_dir = os.path.join(USERS_DIR, username)
     os.makedirs(user_dir, exist_ok=True)
     chat_file = os.path.join(user_dir, f"{chatID}.json")
-    data = {'history': history}
+
+    # A new file, we define the new timestamp
+    if not os.path.exists(chat_file):
+        to_write = {'timestamp': timestamp, 'history': history} 
+    
+    # The file already exists, we read the existent timestamp and rewrite it
+    else:
+        with open(chat_file, 'r') as f:
+            data = json.load(f)
+        to_write = {'timestamp': data.get('timestamp'), 'history': history} 
+
+
     with open(chat_file, 'w') as f:
-        json.dump(data, f, indent=2)
+        json.dump(to_write, f, indent=2)
 
 
 #===================================================================================================================
@@ -44,6 +55,7 @@ def loadAll():
 
     user_dir = os.path.join(USERS_DIR, username)
     titles = []
+    timestamps = []
 
     if not os.path.exists(user_dir):
         return jsonify({'success': False, 'error': f'User not found with username {username} not found'}), 404
@@ -52,8 +64,13 @@ def loadAll():
         if fname.endswith('.json') and fname != 'user.json':
             title = fname[:-5] # Remove the .json at the end
             titles.append(title)
+            
+            with open(os.path.join(user_dir, fname), 'r') as f:
+                data_file = json.load(f)
+            timestamps.append(data_file.get('timestamp'))
 
-    return jsonify({'success': True, 'titles': titles})
+
+    return jsonify({'success': True, 'titles': titles, 'timestamps': timestamps})
 
 
 
@@ -82,10 +99,11 @@ def save():
 
     username = data.get('username')
     chatId = data.get('chatID')
+    timestamp = data.get('timestamp')
     history = data.get('history')
 
     try:
-        save_chat_history(username, chatId, history)
+        save_chat_history(username, chatId, timestamp, history)
     except Exception as e:
         print(f"Error saving chat history: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500

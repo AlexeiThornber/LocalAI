@@ -30,7 +30,7 @@ export async function login(
 
 export async function loadAllTitles(
     uid: string,
-    callback:(titles: string[]) => void
+    callback:(titles: string[], timestamps: number[]) => void
 ): Promise<void>{
     const response = await fetch('http://localhost:5000/api/loadAll',{
         method: 'POST',
@@ -39,7 +39,7 @@ export async function loadAllTitles(
     });
 
     const text = await response.text();
-    let result: { success: any; titles: string[]; error: any; };
+    let result: { success: any; titles: string[]; timestamps: number[]; error: any; };
     
     try {
         result = JSON.parse(text);
@@ -48,7 +48,7 @@ export async function loadAllTitles(
         console.error("JSON parse error:", e);
     }
 
-    callback(result.titles);
+    callback(result.titles, result.timestamps);
 }
 
 export async function fetchChat(
@@ -95,7 +95,7 @@ export async function deleteChat(
     // }
 }
 
-export async function saveMessages(uid: string, chatId: string,  messages: string[]){
+export async function saveMessages(uid: string, chatId: string, timestamp: number,  messages: string[]){
     const conversationHistory: Array<{user:string, bot:string}> = [];
 
     for(let i = 0; i < messages.length; i += 2){
@@ -110,6 +110,7 @@ export async function saveMessages(uid: string, chatId: string,  messages: strin
     const payload = {
         username: uid,
         chatID: chatId,
+        timestamp: timestamp,
         history: conversationHistory
     }
 

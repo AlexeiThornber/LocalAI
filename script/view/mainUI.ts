@@ -57,8 +57,14 @@ function onLoad(){
     h1title.textContent = "New Chat";
 
     deleteButton.style.display = "none";
-    loadAllTitles(userID, (titles) => {
-        titles.forEach(title => {
+    loadAllTitles(userID, (titles, timestamps) => {
+
+        const sortedTitles = titles
+            .map((title, i) => ({title, timestamp: timestamps[i]}))
+            .sort((a,b) => (b.timestamp - a.timestamp))
+            .map(item => item.title);
+
+        sortedTitles.forEach(title => {
             loadChatHistory(title);
         })
     });
@@ -236,7 +242,7 @@ function getContent(payload: string, selectedModel: string): void{
         () => {
             messages.push(stringBuilder);
 
-            saveMessages(userID, chatID, messages);
+            saveMessages(userID, chatID, Date.now(), messages);
         },
     );
 }
