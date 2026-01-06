@@ -45,7 +45,9 @@ export async function getTitle(
 
     const reply = await response.text();
     const result = JSON.parse(reply);
-    callback(result.response.slice(1).replace(/^"+|"+$/g, ''));
+
+    model == 'mistral' ? 
+        callback(result.response.slice(1).replace(/^"+|"+$/g, '')) : callback(result.response);
 }
 
 async function parsePayload(

@@ -1,3 +1,5 @@
+//TODO should add a onSuccess and onFailuer callback to all of these to be honest
+
 
 export async function login(
     username: string,
@@ -78,7 +80,9 @@ export async function fetchChat(
 
 export async function deleteChat(
     uid: string,
-    chatId: string
+    chatId: string,
+    onSuccess: () => void,
+    onFailure: () => void
 ): Promise<void>{
 
     const response = await fetch('http://localhost:5000/api/deleteChat',{
@@ -89,13 +93,39 @@ export async function deleteChat(
 
     const text = await response.text();
     const result = JSON.parse(text);
-
-    // if(result.success){
-        //alert(`chat with title: ${chatId} has successfully been deleted`);
-    // }
+    if(result.success){
+        onSuccess;
+    }else{
+        onFailure;
+    }
 }
 
-export async function saveMessages(uid: string, chatId: string, timestamp: number,  messages: string[]){
+export async function deleteAccount(
+    uid: string,
+    onSuccess: () => void,
+    onFailure: () => void
+): Promise<void> {
+    const response = await fetch('http://localhost:5000/api/deleteAccount', {
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body : JSON.stringify({username: uid})
+    });
+
+    const text = await response.text();
+    const result = JSON.parse(text);
+    if(result.success){
+        onSuccess();
+    }else{
+        onFailure();
+    }
+}
+
+export async function saveMessages(
+    uid: string,
+    chatId: string,
+    timestamp: number,
+    messages: string[]
+    ){
     const conversationHistory: Array<{user:string, bot:string}> = [];
 
     for(let i = 0; i < messages.length; i += 2){

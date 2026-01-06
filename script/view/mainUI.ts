@@ -1,6 +1,6 @@
 // Function imoprts
 import {sendPayload, getTitle} from '../controller/ollamaAPI.js';
-import { saveMessages, loadAllTitles, fetchChat, deleteChat } from '../controller/dbAPI.js';
+import { saveMessages, loadAllTitles, fetchChat, deleteChat, deleteAccount } from '../controller/dbAPI.js';
 
 // declare var marked: any;
 /*
@@ -29,7 +29,7 @@ const modelSelector = document.getElementById("modelSelect");
 const settingsButton = document.getElementById('settingsButton');
 const settingsOverlay = document.getElementById('settingsOverlay');
 const logoutBtn = document.getElementById('logoutBtn');
-const changeTitleBtn = document.getElementById('changeTitleBtn');
+const deleteAccountBtn = document.getElementById('deleteAccount');
 
 const userID = sessionStorage.getItem('username');
 
@@ -146,7 +146,14 @@ if(themeButton){
 
 if(deleteButton){
     deleteButton.addEventListener('click', () => {
-        deleteChat(userID, chatID);
+        deleteChat(userID, chatID,
+            () => {
+                console.log("Chat succefully deleted");
+            },
+            () => {
+                console.log("Something went wrong");
+            }
+        );
         onLoad();
     });
 }else{
@@ -180,16 +187,23 @@ if(logoutBtn){
     console.log("Element with id 'logoutBtn' not found");
 }
 
-// Change chat title action
-// changeTitleBtn.addEventListener('click', () => {
-//     const newTitle = prompt('Enter new chat title:');
-//     if (newTitle) {
-//         // Implement your logic to change the chat title here
-//         // For example, update the UI and send to backend if needed
-//         document.getElementById('title').textContent = newTitle;
-//     }
-//     settingsOverlay.style.display = 'none';
-// });
+if(deleteAccountBtn){
+    deleteAccountBtn.addEventListener('click', () => {
+        deleteAccount(userID,
+            () => {
+                console.log("Account succefully deleted");
+                sessionStorage.clear();
+                window.location.href = "login.html";
+            },
+            () => {
+                console.log("Something went wrong");
+            }
+        );
+    })
+}else{
+    console.log("Element with id 'deleteAccount' not found");
+}
+
 
 // Hide overlay when clicking outside
 document.addEventListener('click', () => {
@@ -206,6 +220,7 @@ function handleMessage(): void{
     const payload: string = userInput.value;
 
     const selectedModel = (modelSelector as HTMLSelectElement).value;
+    createUserMessage(payload);
 
     if(newChatBool){
         getTitle(payload, selectedModel, (title) => {
@@ -227,7 +242,6 @@ function handleMessage(): void{
 }
 
 function getContent(payload: string, selectedModel: string): void{
-    createUserMessage(payload);
     const botSpan = createBotMessage();
     var stringBuilder: string = "";
 

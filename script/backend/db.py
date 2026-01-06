@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 import json
+import shutil
 
 app = Flask(__name__)
 CORS(app)
@@ -135,6 +136,26 @@ def deleteChat():
 
     return jsonify({'success': True})
 
+
+@app.route('/api/deleteAccount', methods = ['POST'])
+def deleteAccount():
+    data = request.json
+
+    uid = data.get('username')
+
+    user_folder = os.path.join(USERS_DIR, uid)
+
+    if not os.path.exists(user_folder):
+        print(f'user not found with name {uid}')
+        return jsonify({'success': False, 'error': f'Folder not found with username {uid}'}), 404
+
+    try:
+        shutil.rmtree(user_folder)
+    except Exception as e:
+        print(f"Error when deleting user: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+    
+    return jsonify({'success': True})
 
 
 @app.route('/api/login', methods = ['POST'])
