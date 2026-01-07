@@ -1,5 +1,5 @@
 import {login} from '../controller/dbAPI.js';
-import {hashPassword} from '../helper.js';
+// import {hashPassword} from '../helper.js';
 /*
     This file will handle the view for the login.html
 */
@@ -37,7 +37,7 @@ async function getAndSendCredentials(){
     const username = (document.getElementById("username") as HTMLInputElement).value;
     const password = (document.getElementById("password") as HTMLInputElement).value;
 
-    const passwordHash = await hashPassword(password);
+    // const passwordHash = await hashPassword(password);
 
-    login(username, passwordHash, "login");
+    login(username, password, "login");
 }

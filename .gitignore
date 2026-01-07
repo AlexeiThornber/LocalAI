@@ -1,3 +1,5 @@
 users
 out
 .vscode
+node_modules
+venv
