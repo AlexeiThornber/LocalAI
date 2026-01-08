@@ -1,6 +1,11 @@
 localai.tailbaa1e6.ts.net {
+
     handle_path /api/* {
         reverse_proxy localhost:5000
+    }
+
+    handle_path /ollama/* {
+        reverse_proxy host.docker.internal:11434
     }
 
     handle {

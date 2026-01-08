@@ -21,6 +21,8 @@ services:
       - TS_HOSTNAME=localai                     # Your tailnet hostname
       - TS_AUTHKEY=      # Your OAuth client key
       - TS_EXTRA_ARGS=--advertise-tags=tag:localai # Required for OAuth client
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     init: true
     healthcheck:
       test: tailscale status --peers=false --json | grep 'Online.*true'
