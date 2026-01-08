@@ -1,23 +1,69 @@
 version: "3.7"
+
 services:
-  ts-authkey-test:
-    image: tailscale/tailscale:latest
-    container_name: ts-authkey-test
-    hostname: authkey-test
-    environment:
-      - TS_AUTHKEY=tskey-auth-kjXQCNkJ4F11CNTRL-DALunyPnYQQ2kWQbXTfoQQ5LvW4bNjMqc
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
+
+  caddy:
+    image: caddy:alpine
+    network_mode: service:tailscale
+    depends_on:
+      webapp:
+        condition: service_started
     volumes:
-      - ${PWD}/ts-authkey-test/state:/var/lib/tailscale
+        - ./Caddyfile:/etc/caddy/Caddyfile
+        - caddy_data:/data
+        - caddy_config:/config
+        - tailscale_sock:/var/run/tailscale:ro
+    restart: unless-stopped
+
+  tailscale:
+    image: tailscale/tailscale:v1.90.9
+    environment:
+      - TS_HOSTNAME=localai                     # Your tailnet hostname
+      - TS_AUTHKEY=      # Your OAuth client key
+      - TS_EXTRA_ARGS=--advertise-tags=tag:localai # Required for OAuth client
+    init: true
+    healthcheck:
+      test: tailscale status --peers=false --json | grep 'Online.*true'
+      start_period: 3s
+      interval: 1s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - ./tailscale-state:/var/lib/tailscale
+      - tailscale_sock:/var/run/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:
-      - net_admin
+      - NET_ADMIN
+      # - sys_module
+    ports:
+      - "443:443"
+      - "80:80"
+      - "5000:5000"
+
+  python-api:
+    build: ./backend
+    container_name: localai-api
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    network_mode: service:tailscale  # Share Tailscale network
+    volumes:
+      - ./users:/app/users
     restart: unless-stopped
 
-  localai-app:
-    image: localai-app   # Use the image you built
-    network_mode: service:ts-authkey-test
+  webapp:
+    build: ./webbrowser
+    container_name: localai-webapp
     depends_on:
-      - ts-authkey-test
+      tailscale:
+        condition: service_healthy
+      python-api:
+        condition: service_started
+    network_mode: service:tailscale  # Share Tailscale network
+    restart: unless-stopped
+
+volumes:
+  tailscale_sock:
+  caddy_data:
+  caddy_config:
