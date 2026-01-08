@@ -21,4 +21,4 @@ RUN npm install -g http-server
 EXPOSE 8080
 
 # 8. Start the server, serving the root directory
-CMD ["http-server", ".", "-p", "8080"]
+CMD ["http-server", ".", "-p", "8080", "-c-1"]

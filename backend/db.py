@@ -7,7 +7,7 @@ import shutil
 app = Flask(__name__)
 CORS(app)
 
-USERS_DIR = os.path.join(os.path.dirname(__file__), '../../users')
+USERS_DIR = os.path.join(os.path.dirname(__file__), 'users/')
 
 max_users = 5
 
@@ -214,4 +214,4 @@ def create_account():
     return jsonify({'success': True})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=True)

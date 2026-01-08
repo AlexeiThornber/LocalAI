@@ -27,7 +27,7 @@ if(loginForm){
 
 if(createButton){
     createButton.addEventListener('click', function(){
-        window.location.href = "createAccount.html";
+        window.location.href = "/html/createAccount.html";
     });
 }else{
     console.log("Element with id 'createButton' has not been found");
