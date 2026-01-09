@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import  Flask, request, jsonify, Response, stream_with_context
 from flask_cors import CORS
 import os
 import json
 import shutil
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -45,7 +46,54 @@ def save_chat_history(username: str, chatID: str, timestamp: int, history: list)
 
 
 #===================================================================================================================
-# API calls 
+# API calls to Ollama
+#===================================================================================================================
+ 
+@app.route('/api/ollama/generate', methods=['POST'])
+def ollama_generate():
+    """Proxy requests to Ollama"""
+    data = request.json
+
+    try:
+        # Forward request to Ollama
+        ollama_response = requests.post(
+            'http://alexei-server-aspire-gx-781.tailbaa1e6.ts.net:11434/api/generate',
+            json=data,
+            stream=data.get('stream', False)
+        )
+        
+        if data.get('stream', True):
+            # Stream response back to client
+            def generate():
+                for line in ollama_response.iter_lines():
+                    if line:
+                        yield line + b'\n'
+            
+            return Response(
+                stream_with_context(generate()),
+                content_type='application/json'
+            )
+        else:
+            # Return complete response
+            return jsonify(ollama_response.json())
+            
+    except Exception as e:
+        print(f"Error calling Ollama: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/ollama/models', methods=['GET'])
+def ollama_models():
+    """List available Ollama models"""
+    try:
+        response = requests.get('http://alexei-server-aspire-gx-781.tailbaa1e6.ts.net:11434/api/tags')
+        return jsonify(response.json())
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+#===================================================================================================================
+# API calls to Ollama
 #===================================================================================================================
  
 @app.route('/api/loadAll', methods = ['POST'])

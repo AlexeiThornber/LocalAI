@@ -17,7 +17,7 @@ export async function sendPayload(
         stream: true
     };
 
-    const response = await fetch('ollama/api/generate', {
+    const response = await fetch('http://localai.tailbaa1e6.ts.net:5000/api/ollama/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData),
@@ -37,7 +37,7 @@ export async function getTitle(
         stream: false
     };
 
-    const response = await fetch('ollama/api/generate', {
+    const response = await fetch('http://localai.tailbaa1e6.ts.net:5000/api/ollama/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData),

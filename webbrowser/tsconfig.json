@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "esnext",
         "lib": ["dom", "es2017"],
-        "outDir": "webbrowser/out",
+        "outDir": "./out",
         "module": "esnext",
         "moduleResolution": "bundler",
     },
