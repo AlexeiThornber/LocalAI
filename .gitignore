@@ -1,3 +1,7 @@
 users
 out
 .vscode
+node_modules
+venv
+tailscale_sock
+tailscale-state

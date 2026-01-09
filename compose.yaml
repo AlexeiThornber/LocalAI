@@ -1,0 +1,97 @@
+version: "3.7"
+
+services:
+
+  # caddy:
+  #   image: caddy:alpine
+  #   network_mode: service:tailscale
+  #   depends_on:
+  #     webapp:
+  #       condition: service_started
+  #   volumes:
+  #       - ./Caddyfile:/etc/caddy/Caddyfile
+  #       - caddy_data:/data
+  #       - caddy_config:/config
+  #       - tailscale_sock:/var/run/tailscale:ro
+  #   restart: unless-stopped
+
+  tailscale:
+    image: tailscale/tailscale:v1.90.9
+    environment:
+      - TS_HOSTNAME=localai                     # Your tailnet hostname
+      - TS_AUTHKEY=tskey-client-kmzLKVN16h11CNTRL-o3FowMhHKeB2afwLLDGBfBWRPwPKbkiVg      # Your OAuth client key
+      - TS_EXTRA_ARGS=--advertise-tags=tag:localai # Required for OAuth client
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    init: true
+    healthcheck:  
+      test: tailscale status --peers=false --json | grep 'Online.*true'
+      start_period: 3s
+      interval: 1s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - ./tailscale-state:/var/lib/tailscale
+      - tailscale_sock:/var/run/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      # - sys_module
+    ports:
+      - "443:443"
+      - "80:80"
+      - "5000:5000"
+
+  python-api:
+    build: ./backend
+    image: localai-api
+    container_name: localai-api
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    network_mode: service:tailscale  # Share Tailscale network
+    volumes:
+      - ./users:/app/users
+    restart: unless-stopped
+
+  webapp:
+    build: ./webbrowser
+    container_name: localai-webapp
+    depends_on:
+      tailscale:
+        condition: service_healthy
+      python-api:
+        condition: service_started
+    network_mode: service:tailscale  # Share Tailscale network
+    restart: unless-stopped
+
+  # ollama:
+  #   mem_limit: 20g
+  #   memswap_limit: 24g
+  #   image: ollama/ollama:0.12.3
+  #   container_name: localai-ollama
+  #   depends_on:
+  #     tailscale:
+  #       condition: service_healthy
+  #   network_mode: service:tailscale
+  #   environment:
+  #     - OLLAMA_DEBUG=1  # Enable debug logging
+  #     - OLLAMA_LLM_LIBRARY=cpu
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   restart: unless-stopped
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+
+volumes:
+  tailscale_sock:
+  caddy_data:
+  caddy_config:
+  ollama_data:
+    name: ollama_data
