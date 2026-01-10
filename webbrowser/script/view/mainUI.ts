@@ -181,7 +181,7 @@ if(settingsOverlay){
 if(logoutBtn){
     logoutBtn.addEventListener('click', () => {
         sessionStorage.clear();
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     });  
 }else{
     console.log("Element with id 'logoutBtn' not found");
