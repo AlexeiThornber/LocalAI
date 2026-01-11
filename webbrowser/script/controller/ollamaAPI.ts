@@ -4,6 +4,8 @@
     and send and http request to the running instance of ollama.
     It will then parse the request and send it back to the UI.ts file as a response.
 */
+const URL = 'https://localai.tailbaa1e6.ts.net'
+
 export async function sendPayload(
     payload: string,
     model: string,
@@ -17,7 +19,7 @@ export async function sendPayload(
         stream: true
     };
 
-    const response = await fetch('http://localai.tailbaa1e6.ts.net:5000/api/ollama/generate', {
+    const response = await fetch(`${URL}/api/ollama/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData),
@@ -37,7 +39,7 @@ export async function getTitle(
         stream: false
     };
 
-    const response = await fetch('http://localai.tailbaa1e6.ts.net:5000/api/ollama/generate', {
+    const response = await fetch(`${URL}/api/ollama/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData),

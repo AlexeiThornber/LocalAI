@@ -1,10 +1,10 @@
 localai.tailbaa1e6.ts.net {
 
-    handle_path /api/ollama/* {
-        reverse_proxy 127.0.0.1:11434
+    handle_path /api/* {
+        reverse_proxy python-api:5000
     }
 
     handle {
-        reverse_proxy 127.0.0.1:8080
+        reverse_proxy webapp:8080
     }
 }

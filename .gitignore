@@ -6,3 +6,4 @@ venv
 tailscale_sock
 tailscale-state
 ollama.log
+.env

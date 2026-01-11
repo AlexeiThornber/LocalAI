@@ -4,6 +4,7 @@ import os
 import json
 import shutil
 import requests
+import hashlib
 
 app = Flask(__name__)
 CORS(app)
@@ -44,12 +45,15 @@ def save_chat_history(username: str, chatID: str, timestamp: int, history: list)
     with open(chat_file, 'w') as f:
         json.dump(to_write, f, indent=2)
 
+def sha256_hash(message):
+    return hashlib.sha256(message.encode('utf-8')).hexdigest()
+
 
 #===================================================================================================================
 # API calls to Ollama
 #===================================================================================================================
  
-@app.route('/api/ollama/generate', methods=['POST'])
+@app.route('/ollama/generate', methods=['POST'])
 def ollama_generate():
     """Proxy requests to Ollama"""
     data = request.json
@@ -82,7 +86,7 @@ def ollama_generate():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/api/ollama/models', methods=['GET'])
+@app.route('/ollama/models', methods=['GET'])
 def ollama_models():
     """List available Ollama models"""
     try:
@@ -93,10 +97,10 @@ def ollama_models():
 
 
 #===================================================================================================================
-# API calls to Ollama
+# API calls to the db
 #===================================================================================================================
  
-@app.route('/api/loadAll', methods = ['POST'])
+@app.route('/loadAll', methods = ['POST'])
 def loadAll():
     data = request.json
 
@@ -123,7 +127,7 @@ def loadAll():
 
 
 
-@app.route('/api/loadChat', methods = ['POST'])
+@app.route('/loadChat', methods = ['POST'])
 def loadChat():
     data = request.json
 
@@ -142,7 +146,7 @@ def loadChat():
 
 
 
-@app.route('/api/save', methods = ['POST'])
+@app.route('/save', methods = ['POST'])
 def save():
     data = request.json
 
@@ -160,7 +164,7 @@ def save():
     return jsonify({'success': True})
 
 
-@app.route('/api/deleteChat', methods = ['POST'])
+@app.route('/deleteChat', methods = ['POST'])
 def deleteChat():
     data = request.json
 
@@ -185,7 +189,7 @@ def deleteChat():
     return jsonify({'success': True})
 
 
-@app.route('/api/deleteAccount', methods = ['POST'])
+@app.route('/deleteAccount', methods = ['POST'])
 def deleteAccount():
     data = request.json
 
@@ -206,7 +210,7 @@ def deleteAccount():
     return jsonify({'success': True})
 
 
-@app.route('/api/login', methods = ['POST'])
+@app.route('/login', methods = ['POST'])
 def login():
     data = request.json
     username = data.get('username')
@@ -224,18 +228,18 @@ def login():
     
     user_data = load_user_json(username)
 
-    if password != user_data["password"]:
-        return jsonify({'success': False, 'error': f'Wrong password for user: {username}'}), 400
+    if sha256_hash(password) != user_data["password"]:
+        return jsonify({'success': False, 'error': f'Wrong password for user: {username} password a:{a}, password b: {b}'}), 400
         
     return jsonify({'success': True})
     
 
 
-@app.route('/api/create-account', methods=['POST'])
+@app.route('/create-account', methods=['POST'])
 def create_account():
     data = request.json
     username = data.get('username')
-    password = data.get('password') # Password arriving here should already be hashed.
+    password = data.get('password')
 
     if not username or not password:
         return jsonify({'success': False, 'error': 'Username and password required'}), 400
@@ -253,7 +257,7 @@ def create_account():
 
     user_data = {
         'username': username,
-        'password': password
+        'password': sha256_hash(password)
     }
 
     with open(user_file, 'w') as f:

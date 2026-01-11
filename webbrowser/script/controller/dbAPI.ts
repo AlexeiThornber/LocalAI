@@ -1,12 +1,13 @@
-//TODO should add a onSuccess and onFailuer callback to all of these to be honest
+//TODO should add a onSuccess and onFailure callback to all of these to be honest
 
+const URL = 'https://localai.tailbaa1e6.ts.net'
 
 export async function login(
     username: string,
     passwordHash: string,
     type: string, //Type can be login or create-account
     ){
-    const response = await fetch(`http://localai.tailbaa1e6.ts.net:5000/api/${type}`, {
+    const response = await fetch(`${URL}/api/${type}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: username, password: passwordHash})
@@ -34,7 +35,7 @@ export async function loadAllTitles(
     uid: string,
     callback:(titles: string[], timestamps: number[]) => void
 ): Promise<void>{
-    const response = await fetch('http://localai.tailbaa1e6.ts.net:5000/api/loadAll',{
+    const response = await fetch(`${URL}/api/loadAll`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: uid})
@@ -59,7 +60,7 @@ export async function fetchChat(
     callback: (title: string, content: any) => void
 ): Promise<void>{
 
-    const response = await fetch('http://localai.tailbaa1e6.ts.net:5000/api/loadChat',{
+    const response = await fetch(`${URL}/api/loadChat`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: uid, chatID: chatId})
@@ -85,7 +86,7 @@ export async function deleteChat(
     onFailure: () => void
 ): Promise<void>{
 
-    const response = await fetch('http://localai.tailbaa1e6.ts.net:5000/api/deleteChat',{
+    const response = await fetch(`${URL}/api/deleteChat`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: uid, chatID: chatId})
@@ -105,7 +106,7 @@ export async function deleteAccount(
     onSuccess: () => void,
     onFailure: () => void
 ): Promise<void> {
-    const response = await fetch('http://localai.tailbaa1e6.ts.net:5000/api/deleteAccount', {
+    const response = await fetch(`${URL}/api/deleteAccount`, {
         method: 'POST',
         headers: {'Content-Type' : 'application/json'},
         body : JSON.stringify({username: uid})
@@ -146,7 +147,7 @@ export async function saveMessages(
 
     console.log(payload);
 
-    const response = await fetch(`http://localai.tailbaa1e6.ts.net:5000/api/save`, {
+    const response = await fetch(`${URL}/api/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
