@@ -18,7 +18,7 @@ max_users = 5
 #Helper functions
 #===================================================================================================================
  
-def load_user_json(username):
+def load_user_json(username: str):
     user_file = os.path.join(USERS_DIR, username, 'user.json')
     if not os.path.exists(user_file):
         return None
@@ -26,24 +26,26 @@ def load_user_json(username):
         return json.load(f)
     
 
-def save_chat_history(username: str, chatID: str, timestamp: int, history: list): 
+def save_chat_history(username: str, chatID: str, timestamp: int, title: str, history: list): 
     user_dir = os.path.join(USERS_DIR, username)
     os.makedirs(user_dir, exist_ok=True)
+
     chat_file = os.path.join(user_dir, f"{chatID}.json")
 
     # A new file, we define the new timestamp
     if not os.path.exists(chat_file):
-        to_write = {'timestamp': timestamp, 'history': history} 
+        to_write = {'title': title, 'timestamp': timestamp, 'history': history} 
     
     # The file already exists, we read the existent timestamp and rewrite it
     else:
         with open(chat_file, 'r') as f:
             data = json.load(f)
-        to_write = {'timestamp': data.get('timestamp'), 'history': history} 
+        to_write = {'title': data.get('title'), 'timestamp': data.get('timestamp'), 'history': history} 
 
 
     with open(chat_file, 'w') as f:
         json.dump(to_write, f, indent=2)
+
 
 def sha256_hash(message):
     return hashlib.sha256(message.encode('utf-8')).hexdigest()
@@ -107,23 +109,25 @@ def loadAll():
     username = data.get('username')
 
     user_dir = os.path.join(USERS_DIR, username)
-    titles = []
-    timestamps = []
+    chats = []
 
     if not os.path.exists(user_dir):
         return jsonify({'success': False, 'error': f'User not found with username {username} not found'}), 404
 
     for fname in os.listdir(user_dir):
         if fname.endswith('.json') and fname != 'user.json':
-            title = fname[:-5] # Remove the .json at the end
-            titles.append(title)
+            chatID = fname[:-5] # Remove the .json at the end
             
             with open(os.path.join(user_dir, fname), 'r') as f:
                 data_file = json.load(f)
-            timestamps.append(data_file.get('timestamp'))
 
+            chats.append({
+                'chatID': chatID,
+                'title': data_file.get('title'),
+                'timestamp': data_file.get('timestamp')
+            })
 
-    return jsonify({'success': True, 'titles': titles, 'timestamps': timestamps})
+    return jsonify({'success': True, 'chats': chats})
 
 
 
@@ -142,7 +146,7 @@ def loadChat():
     with open(chat_file, 'r') as f:
         content = f.read()
 
-    return jsonify({'success': True, 'chatTitle': chatID, 'content': content})
+    return jsonify({'success': True, 'chatID': chatID, 'content': content})
 
 
 
@@ -150,13 +154,17 @@ def loadChat():
 def save():
     data = request.json
 
-    username = data.get('username')
-    chatId = data.get('chatID')
-    timestamp = data.get('timestamp')
-    history = data.get('history')
+    username: str = data.get('username')
+    chatId: str = data.get('chatID')
+    timestamp: int = data.get('timestamp')
+    title: str = data.get('title')
+    history: list = data.get('history')
+
+    if chatId == "":
+        return jsonify({'success': False, 'error': 'ChatID is null or empty, it must have a value'})
 
     try:
-        save_chat_history(username, chatId, timestamp, history)
+        save_chat_history(username, chatId, timestamp, title, history)
     except Exception as e:
         print(f"Error saving chat history: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -229,7 +237,7 @@ def login():
     user_data = load_user_json(username)
 
     if sha256_hash(password) != user_data["password"]:
-        return jsonify({'success': False, 'error': f'Wrong password for user: {username} password a:{a}, password b: {b}'}), 400
+        return jsonify({'success': False, 'error': f'Wrong password for user: {username}'}), 400
         
     return jsonify({'success': True})
     

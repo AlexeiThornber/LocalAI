@@ -24,7 +24,7 @@ export async function login(
     }
 
     if(result.success){
-        sessionStorage.setItem('username', username);
+        localStorage.setItem('username', username);
         window.location.href = `main.html`;
     }else{
         alert(`Error: ${result.error}`);   
@@ -33,7 +33,7 @@ export async function login(
 
 export async function loadAllTitles(
     uid: string,
-    callback:(titles: string[], timestamps: number[]) => void
+    callback:(chats: {chatID: string, title: string, timestamp: number}[]) => void
 ): Promise<void>{
     const response = await fetch(`${URL}/api/loadAll`,{
         method: 'POST',
@@ -42,7 +42,7 @@ export async function loadAllTitles(
     });
 
     const text = await response.text();
-    let result: { success: any; titles: string[]; timestamps: number[]; error: any; };
+    let result: { success: any; chats: {chatID: string, title: string, timestamp: number}[]; error: any; };
     
     try {
         result = JSON.parse(text);
@@ -51,13 +51,13 @@ export async function loadAllTitles(
         console.error("JSON parse error:", e);
     }
 
-    callback(result.titles, result.timestamps);
+    callback(result.chats);
 }
 
 export async function fetchChat(
     uid: string,
     chatId: string,
-    callback: (title: string, content: any) => void
+    callback: (content: any) => void
 ): Promise<void>{
 
     const response = await fetch(`${URL}/api/loadChat`,{
@@ -67,7 +67,7 @@ export async function fetchChat(
     })
 
     const text = await response.text();
-    let result: { success: any; chatTitle: string; content: string; error: any; };
+    let result: { success: any; chatID: string; content: string; error: any; };
 
     try {
         result = JSON.parse(text);
@@ -76,7 +76,7 @@ export async function fetchChat(
         console.error("JSON parse error:", e);
     }
 
-    callback(result.chatTitle, JSON.parse(result.content))
+    callback(JSON.parse(result.content))
 }
 
 export async function deleteChat(
@@ -125,7 +125,8 @@ export async function saveMessages(
     uid: string,
     chatId: string,
     timestamp: number,
-    messages: string[]
+    messages: string[],
+    title: string = ""
     ){
     const conversationHistory: Array<{user:string, bot:string}> = [];
 
@@ -138,10 +139,12 @@ export async function saveMessages(
         });
     }
 
+    // let payload: { username: string; chatID: string; timestamp: number; history: { user: string; bot: string; }[]; title?: string; };
     const payload = {
         username: uid,
         chatID: chatId,
         timestamp: timestamp,
+        title: title,
         history: conversationHistory
     }
 

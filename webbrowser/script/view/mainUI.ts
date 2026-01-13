@@ -21,7 +21,7 @@ const chatWindow = document.getElementById('chatWindow');
 const newChat = document.getElementById('newChatButton');
 const h1title = document.getElementById('title');
 const chatHistory = document.getElementById('chatHistory');
-const deleteButton = document.getElementById('delete');
+const deleteChatBtn = document.getElementById('delete');
 const themeButton = document.getElementById('theme');
 const sunSvg = document.getElementById('bi-sun');
 const moonSvg = document.getElementById('bi-moon');
@@ -31,7 +31,7 @@ const settingsOverlay = document.getElementById('settingsOverlay');
 const logoutBtn = document.getElementById('logoutBtn');
 const deleteAccountBtn = document.getElementById('deleteAccount');
 
-const userID = sessionStorage.getItem('username');
+const userID = localStorage.getItem('username');
 
 var chatID: string = ""; //TODO any better way than to have a global variable
 var theme: boolean = Theme.Ligth;
@@ -50,32 +50,33 @@ The following code loads the history of chats of the designated user
 onLoad()
 
 function onLoad(){
+    if(userID == null){
+        window.location.href = "index.html"
+    }
+
     clearActiveClass();
     clearMainChat();
     clearTitle();
     clearChatHistory();
     h1title.textContent = "New Chat";
 
-    deleteButton.style.display = "none";
-    loadAllTitles(userID, (titles, timestamps) => {
+    deleteChatBtn.style.display = "none";
+    loadAllTitles(userID, (chats) => {
 
-        const sortedTitles = titles
-            .map((title, i) => ({title, timestamp: timestamps[i]}))
-            .sort((a,b) => (b.timestamp - a.timestamp))
-            .map(item => item.title);
+        const sortedChats = chats.sort((a,b) => (b.timestamp - a.timestamp))
 
-        sortedTitles.forEach(title => {
-            loadChatHistory(title);
-        })
+        for(let i = 0; i < sortedChats.length; i++ ){
+            loadChatHistory(sortedChats[i]['chatID'], sortedChats[i]['title'])
+        }
     });
 }
 
-function loadChatHistory(title: string): void{
-    refreshChat(title);
-    chatHistory.appendChild(refreshChat(title, true));
+function loadChatHistory(chatID: string, title: string): void{
+    refreshChats(chatID, title);
+    chatHistory.appendChild(refreshChats(chatID, title, true));
 }
 
-function displayChat(title:string, content: any){
+function displayChat(content: any){
     clearMainChat();
     clearTitle();
 
@@ -84,7 +85,7 @@ function displayChat(title:string, content: any){
         messages.push(element.bot);
         createUserMessage(element.user);
         createBotMessage(marked.parse(element.bot));
-        addTitle(title);
+        addTitle(content.title);
     })
 }
 
@@ -119,7 +120,7 @@ if(newChat){
         chatWindow.innerHTML = '';
         clearMessages();
         clearActiveClass();
-        deleteButton.style.display = "none";
+        deleteChatBtn.style.display = "none";
     });
 }else{
     console.log("Element with id 'newChatButton' has not been found");
@@ -144,8 +145,8 @@ if(themeButton){
     console.log("Element with id 'theme' has not beef found");
 }
 
-if(deleteButton){
-    deleteButton.addEventListener('click', () => {
+if(deleteChatBtn){
+    deleteChatBtn.addEventListener('click', () => {
         deleteChat(userID, chatID,
             () => {
                 console.log("Chat succefully deleted");
@@ -180,7 +181,7 @@ if(settingsOverlay){
 
 if(logoutBtn){
     logoutBtn.addEventListener('click', () => {
-        sessionStorage.clear();
+        localStorage.clear();
         window.location.href = 'index.html';
     });  
 }else{
@@ -192,8 +193,8 @@ if(deleteAccountBtn){
         deleteAccount(userID,
             () => {
                 console.log("Account succefully deleted");
-                sessionStorage.clear();
-                window.location.href = "login.html";
+                localStorage.clear();
+                window.location.href = "index.html";
             },
             () => {
                 console.log("Something went wrong");
@@ -224,13 +225,13 @@ function handleMessage(): void{
 
     if(newChatBool){
         getTitle(payload, selectedModel, (title) => {
-            chatID = title;
+            chatID = crypto.randomUUID();
             clearActiveClass();
-            addTitle(chatID);
-            chatHistory.insertBefore(refreshChat(chatID), chatHistory.firstChild);
-            deleteButton.style.display = "";
+            addTitle(title);
+            chatHistory.insertBefore(refreshChats(chatID, title), chatHistory.firstChild);
+            deleteChatBtn.style.display = "";
             
-            getContent(payload, selectedModel);
+            getContent(payload, selectedModel, title);
             newChatBool = false;
 
         });
@@ -241,7 +242,7 @@ function handleMessage(): void{
     clearUserInput();
 }
 
-function getContent(payload: string, selectedModel: string): void{
+function getContent(payload: string, selectedModel: string, title: string = ""): void{
     const botSpan = createBotMessage();
     var stringBuilder: string = "";
 
@@ -256,7 +257,7 @@ function getContent(payload: string, selectedModel: string): void{
         () => {
             messages.push(stringBuilder);
 
-            saveMessages(userID, chatID, Date.now(), messages);
+            saveMessages(userID, chatID, Date.now(), messages, title);
         },
     );
 }
@@ -329,9 +330,9 @@ function createUserMessage(content: string):void{
     scrollChatToBottom();
 }
 
-function refreshChat(title: string, onLoad: boolean = false): HTMLElement {
+function refreshChats(selectedChatID: string, title: string, onLoad: boolean = false): HTMLElement {
     const titleLi = document.createElement('li');
-    titleLi.id = title;
+    titleLi.id = selectedChatID;
     titleLi.innerHTML = title;
     titleLi.className = onLoad ? "" : "active";
     titleLi.addEventListener('click', () => {
@@ -339,14 +340,14 @@ function refreshChat(title: string, onLoad: boolean = false): HTMLElement {
 
         fetchChat(
             userID,
-            title,
+            selectedChatID,
             displayChat
         )
         clearActiveClass();
         titleLi.className = "active";
-        deleteButton.style.display = "";
+        deleteChatBtn.style.display = "";
         newChatBool = false;
-        chatID = title;
+        chatID = selectedChatID;
     });
     return titleLi;
 }
